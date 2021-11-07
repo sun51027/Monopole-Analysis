@@ -230,14 +230,6 @@ public:
 	}
 	//cout<<"do analysis end"<<endl;	
   }
-  bool operator<(const MonoCandidate &mc)const{
-   if(dEdXSig_>mc.dEdXSig_) return true;
-   else if(dEdXSig_==mc.dEdXSig_){
-        if(f51_>mc.f51_) return true;
-        else return false;
-        }
-    else return false;
-  }
   void FillN1Histogram(int n, vector<MonoCandidate> N1CutCand){
 	PlotSet &z = n_1Plot[n];
 	for(int i=0; i < N1CutCand.size() ;i++){
