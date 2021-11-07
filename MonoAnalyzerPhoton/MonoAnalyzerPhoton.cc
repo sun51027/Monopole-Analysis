@@ -19,22 +19,8 @@
 #include <algorithm>
 #include <string>
 #include "Candidate.h"
+#include "PlotSet.h"
 using namespace std;
-enum PlotName{
-  FracSatVNstrips = 0, // fraction of saturated strips vs. number of strips
-  DedXSig,             // dE/dX significance
-  XYPar0,
-  XYPar2,
-  RZPar0,
-  RZPar1,
-  RZcurv,              // RZ curvature/uncertainty
-  E55,
-  F51,                 // frac 51
-  HcalIso,             // Hcal Iso
-  ABCD,
-  Spike
-};
-static const unsigned nPlot = 15U;
 class MonoCuts:public MonoCandidate, public Photon
 {
 public:
@@ -276,7 +262,7 @@ public:
           z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 	}
   }
-  void Matching(vector<MonoCandidate> CandFlowCand){
+  void Matching(vector<MonoCandidate> CutFlowCand){
 	   for(int i=0; i<CutFlowCand.size();i++){
 
 		double m_deltaR=0;
@@ -444,46 +430,16 @@ private:
   int E_count=0;
   int f51_count=0;
   int dEdX_count=0; 
-  
-  int MonoNum1=0;
-  int MonoNum2=0;
-  int MonoNum3=0;
-  int FakeNum=0;
-  int RealNum=0;
-  int RealAntiNum=0;
-  int RealEvNum=0;
   int SpikeLike=0;
   int EBarrel=0; 
- 
   int Reco=0;
-  int Gen=0;
   int photonLike=0;
-
-  int count_test=0;
-  int TRGminitest=0;
-  int Qualminitest=0;
   //relative eff without HLT
   int NoTRG=0;
   int NoQual=0;
-  int NoQualCand=0;
   int NoE=0;
-  int NoECand=0;
   int NoF51=0;
-  int NoF51Cand=0;
   int NodEdXCut=0;
-  int NodEdXCutCand=0;
-  //Apply TRG 
-  int count_TRG=0;
-  int Qual_count_TRG=0;
-  int E_count_TRG=0;
-  int f51_count_TRG=0;
-  int dEdX_count_TRG=0;
-  //relative eff with HLT
-  int No_TRGTRG=0;
-  int No_TRGQual=0;
-  int No_TRGE=0;
-  int No_TRGF51=0;
-  int No_TRGdEdXCut=0;
 
 };
 
