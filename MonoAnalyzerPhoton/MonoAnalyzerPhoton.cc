@@ -446,8 +446,8 @@ private:
   //Cuts parameters
   const double MonoCuts::xyp0Cut_=0.6;
   const double MonoCuts::xyp2Cut_=1000;
-  const double MonoCuts::rzp0Cut_=20;
-  const double MonoCuts::rzp1Cut_=2.5;
+  const double MonoCuts::rzp0Cut_=10;
+  const double MonoCuts::rzp1Cut_=999;
   const double MonoCuts::rzp2Cut_=0.005;
   const double MonoCuts::distCut_ = 0.5;
   const double MonoCuts::hIsoCut_= 10;
@@ -568,7 +568,6 @@ void MonoAnalyzerPhoton()
 
 		for(unsigned i=0;i<nCandidates;i++){
         	
-			Et[i]= (*e55)[i]/(TMath::CosH(TMath::Abs((*eta)[i])));
 		cand[i] = MonoCandidate(
 	        (*subHits)[i],
 	        (*subSatHits)[i],
@@ -584,8 +583,7 @@ void MonoAnalyzerPhoton()
 	        (*f51)[i],
 	        (*f15)[i],
 		(*Cross)[i],
-		Et[i],
-//	        (*e55)[i],
+	        (*e55)[i],
 	        (*hIso)[i],
 	        (*eta)[i],
 	        (*phi)[i],
