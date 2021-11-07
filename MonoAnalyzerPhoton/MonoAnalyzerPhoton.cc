@@ -411,9 +411,10 @@ void MonoAnalyzerPhoton()
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
 	TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-
+	TrgAnalysis.SaveAs_csv("HLT_Photon200",NEvents);
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
+	noTrgAnalysis.SaveAs_csv("NOTRG",NEvents);
 	oFile->Close();	
 	cout<<"end of the code"<<endl;
 }

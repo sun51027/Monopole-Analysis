@@ -128,7 +128,30 @@ public:
 	cout<<"=================================="<<endl;
   }
   void SignalEff(const string trName, double TotalEvents);
+  void SaveAs_csv(const string trName, double TotalEvents){
+        ofstream fout("SignalMC_eff.csv");
 
+        if(!fout) cout<<"Cannot open file"<<endl;
+        else    cout<<"Open file successfully"<<endl;
+
+        fout<<trName<<","<<TotalEvents<<endl;
+        fout<<"        TRG, "<<count<<endl;
+        fout<<"QualityCuts, "<<Qual_count<<endl;
+        fout<<"       ECut, "<<E_count<<endl;
+        fout<<"     F51Cut, "<<f51_count<<endl;
+        fout<<" dEdXSigCut, "<<dEdX_count<<endl;
+        fout<<"Signal efficiency, "<<(double)dEdX_count/(double)TotalEvents<<endl;
+        fout<<endl;
+        fout<<endl;
+	fout<<",N1Cuts,Relative eff"<<endl;
+        fout<<"     No TRG, "<<NoTRG <<","<<(double)dEdX_count/(double)NoTRG<<endl;
+        fout<<" No Quality, "<<NoQual<<","<<(double)dEdX_count/(double)NoQual<<endl;
+        fout<<"    No ECut, "<< NoE  <<","<<(double)dEdX_count/(double)NoE<<endl;
+        fout<<"  No F51Cut, "<<NoF51 <<","<<(double)dEdX_count/(double)NoF51<<endl;
+        fout<<" No dEdXSig, "<<NodEdXCut<<","<<(double)dEdX_count/(double)NodEdXCut<<endl;
+        fout<<endl;
+
+  }
   bool operator<(const MonoCandidate &mc)const{
    if(dEdXSig_>mc.dEdXSig_) return true;
    else if(dEdXSig_==mc.dEdXSig_){
