@@ -242,18 +242,6 @@ public:
           z.GetPlot(ABCD)->Fill(N1CutCand[i].f51_,N1CutCand[i].dEdXSig_);
 	}
   }
-  void FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand){
-	PlotSet &z =CutFlow[n];
-	for(int i=0; i < CutFlowCand.size() ;i++){
-	  z.GetPlot(FracSatVNstrips)->Fill(CutFlowCand[i].subHits_,CutFlowCand[i].subSatHits_/CutFlowCand[i].subHits_);
-	  z.GetPlot(DedXSig)->Fill(CutFlowCand[i].dEdXSig_);
-	  z.GetPlot(RZcurv)->Fill(CutFlowCand[i].rzp2_);
-          z.GetPlot(E55)->Fill(CutFlowCand[i].e55_);
-	  z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
-          z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
-          z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
-	}
-  }
   void Matching(vector<MonoCandidate> CutFlowCand){
 	   for(int i=0; i<CutFlowCand.size();i++){
 
