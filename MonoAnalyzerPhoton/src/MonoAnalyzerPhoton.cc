@@ -1,14 +1,10 @@
-//////////////////////////////////
 //
-//	File name: MonoAnalyzerPhoton.cc
-//	author: Shih Lin
-//	Content: **Mainly for analyzing HLT_Photon200 trigger**
-//		   (the original analysis)
-//		 the significance plots for every cuts
-//		 count efficiency for every cuts
-//		 Matching(21/2/25 update)
-//		 Update file name (June 5 2021) 
-/////////////////////////////////////////////////////
+//	MonoAnalyzerPhoton.cc
+//	Created by  Shih Lin
+//	
+//	Analysis code for Photon trigger(HLT_Photon200 mainly)
+//
+//
 #include "iostream"
 #include "TAttMarker.h"
 #include "TFile.h"
@@ -18,15 +14,14 @@
 #include "math.h"
 #include <algorithm>
 #include <string>
-#include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoAnalyzerPhoton/interface/Candidate.h"
-#include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoAnalyzerPhoton/interface/PlotSet.h"
-#include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoAnalyzerPhoton/interface/MonoCuts.h"
+#include "../interface/Candidate.h"
+#include "../interface/PlotSet.h"
+#include "../interface/MonoCuts.h"
 using namespace std;
 
   void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev)
   {
 	Clear();
-//	cout<<"ev "<<ev<<", cand number "<<nCandidates<<endl;
 
      for(unsigned c=0;c<nCandidates;c++){
 
@@ -37,7 +32,6 @@ using namespace std;
 	bool dEdXCut = evaldEdX(cands);
 
 	//count for total events without TRG	
-
 	if(TRG) CutFlowCand_TRG.push_back(cands);
 	//N-1 cut and relative efficiency
         if( ECut && F51Cut && dEdXCut &&TRG) N1CutCand_Qual.push_back(cands); 
@@ -60,13 +54,13 @@ using namespace std;
       }//for cand loop
 
     	
-    if(nPhoton!=0){
-    for(unsigned p=0;p<nPhoton;p++){
-	Photon &photon = pho[p];
-	bool PhotonPtCut = evalPhoton(photon);
-	if(PhotonPtCut) HighPtPhoton.push_back(photon);
-    }
-    }
+//    if(nPhoton!=0){
+//    for(unsigned p=0;p<nPhoton;p++){
+//	Photon &photon = pho[p];
+//	bool PhotonPtCut = evalPhoton(photon);
+//	if(PhotonPtCut) HighPtPhoton.push_back(photon);
+//    }
+//    }
 	//cut flow events calculating
         sort(CutFlowCand_TRG.begin(),CutFlowCand_TRG.begin()+CutFlowCand_TRG.size());
 	
@@ -213,10 +207,8 @@ using namespace std;
 	oFile->cd(trigName_.c_str());
 	NoCutPlot[0].WritePlot();
 	for(unsigned c=0; c<nCut; c++) n_1Plot[c].WritePlot();
-        cout<<"n-1cut pass writeplots func"<<endl;
 
 	for(unsigned c=0; c<nCut; c++) CutFlow[c].WritePlot();
-	cout<<"cutflow pass writeplots func"<<endl;
 	
   }
   void MonoCuts::SignalEff(const string trName, double TotalEvents)
@@ -358,7 +350,6 @@ void MonoAnalyzerPhoton()
 	vector<MonoCandidate> cand(10);	
 	vector<Photon> photon(0);
 
-	cout<<"total events "<<NEvents<<endl;	
         for(unsigned ev=0; ev<NEvents;ev++){
 
 		if(ev%1000==0)	cout<<ev<<"/"<<NEvents<<endl;
