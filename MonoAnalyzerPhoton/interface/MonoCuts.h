@@ -233,6 +233,9 @@ private:
   int NoE=0;
   int NoF51=0;
   int NodEdXCut=0;
+
+  int MatchedEvent=0;
+  bool Flag=0;
 };
 
 #endif

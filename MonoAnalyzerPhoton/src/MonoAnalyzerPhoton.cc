@@ -185,10 +185,14 @@ using namespace std;
 		am_deltaR= sqrt(pow(CutFlowCand[i].eta_-CutFlowCand[0].amon_eta_,2)+
                                 pow(CutFlowCand[i].phi_-CutFlowCand[0].amon_phi_,2));
 
-		if(m_deltaR<0.15) 	Reco++;
-		else if(am_deltaR<0.15) Reco++;
-		
+		if(m_deltaR<0.15||am_deltaR<0.15){
+			Reco++;
+			Flag=1;
+		}
 	   }
+	   if(Flag==1)	      MatchedEvent++;
+	
+	Flag=0;
   }
   void MonoCuts::Clear(){
 
@@ -243,9 +247,7 @@ using namespace std;
         cout<<"     F51Cut "<<(double)dEdX_count/(double)NoF51<<endl;
         cout<<" dEdXSigCut "<<(double)dEdX_count/(double)NodEdXCut<<endl;
         cout<<endl;
-	cout<<"Total reconstructed event "<<Reco<<endl;
-	cout<<"EBarrel "<<EBarrel<<endl;
-	cout<<"SpikeLike in EB "<<SpikeLike<<endl;
+	cout<<"Total reconstructed event "<<MatchedEvent<<endl;
 	  
       cout<<endl;
   }
@@ -411,10 +413,10 @@ void MonoAnalyzerPhoton()
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
 	TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-	TrgAnalysis.SaveAs_csv("HLT_Photon200_SignalMC_eff.csv",NEvents);
+	TrgAnalysis.SaveAs_csv("HLT_Photon200_SignalMC_1000_eff.csv",NEvents);
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_eff.csv",NEvents);
+	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_1000_eff.csv",NEvents);
 	oFile->Close();	
 	cout<<"end of the code"<<endl;
 }

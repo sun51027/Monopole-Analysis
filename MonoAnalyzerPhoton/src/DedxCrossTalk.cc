@@ -263,11 +263,11 @@ using namespace std;
   const double MonoCuts::f51Cut_ = 0.85;
   const double MonoCuts::photonCut_ = 200;
 
-void MonoAnalyzerPhoton()
+void DedxCrossTalk()
 {
-	TFile *oFile = new TFile("MonoPhotonAnalysis_2018_1000.root","recreate");
+	TFile *oFile = new TFile("./output/DedxCrossTalk_X0up_Analysis_2018_1000.root","recreate");
 
-	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoNtuple2018/1000/MonoNtuple2018_MC_1000.root");
+	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DedxCrossTalk/X0/Up/1000/DedxCrossTalk_X0up_2018_1000.root");
         TTree *tree = (TTree*)fin->Get("monopoles");
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
@@ -411,10 +411,10 @@ void MonoAnalyzerPhoton()
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
 	TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-	TrgAnalysis.SaveAs_csv("HLT_Photon200_SignalMC_eff.csv",NEvents);
+	TrgAnalysis.SaveAs_csv("HLT_Photon200_SignalMC_DedxCrosstalk_eff.csv",NEvents);
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_eff.csv",NEvents);
+	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_DedxCrosstalk_eff.csv",NEvents);
 	oFile->Close();	
 	cout<<"end of the code"<<endl;
 }

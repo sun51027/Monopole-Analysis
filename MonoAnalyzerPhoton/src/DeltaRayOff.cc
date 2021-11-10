@@ -265,8 +265,8 @@ using namespace std;
 
 void DeltaRayOff()
 {
-	TFile *oFile = new TFile("DeltaRayOff_Analysis_2018_4000.root","recreate");
-	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DeltaRayOff/4000/DeltaRayOff_2018_4000.root");
+	TFile *oFile = new TFile("DeltaRayOff_Analysis_2018_1000.root","recreate");
+	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DeltaRayOff/1000/DeltaRayOff_2018_1000.root");
         TTree *tree = (TTree*)fin->Get("monopoles");
 
         Bool_t passHLT_Photon200;
@@ -411,10 +411,10 @@ void DeltaRayOff()
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
 	TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-	TrgAnalysis.SaveAs_csv("HLT_Photon200_SignalMC_eff.csv",NEvents);
+	TrgAnalysis.SaveAs_csv("HLT_Photon200_DeltaRayOff_1000_eff.csv",NEvents);
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_eff.csv",NEvents);
+	noTrgAnalysis.SaveAs_csv("NOTRG_DeltaRayOff_1000_eff.csv",NEvents);
 	oFile->Close();	
 	cout<<"end of the code"<<endl;
 }

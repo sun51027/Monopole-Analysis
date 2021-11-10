@@ -243,9 +243,6 @@ using namespace std;
         cout<<"     F51Cut "<<(double)dEdX_count/(double)NoF51<<endl;
         cout<<" dEdXSigCut "<<(double)dEdX_count/(double)NodEdXCut<<endl;
         cout<<endl;
-	cout<<"Total reconstructed event "<<Reco<<endl;
-	cout<<"EBarrel "<<EBarrel<<endl;
-	cout<<"SpikeLike in EB "<<SpikeLike<<endl;
 	  
       cout<<endl;
   }
@@ -265,9 +262,9 @@ using namespace std;
 
 void EcalUncertainty()
 {
-	TFile *oFile = new TFile("EcalSystematicAnalysis_2018_1000.root","recreate");
+	TFile *oFile = new TFile("./output/EcalSystematicAnalysis_2018_4000.root","recreate");
 
-	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/ECal/1000/EcalSystematic_2018_1000.root");
+	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/ECal/4000/EcalSystematic_2018_4000.root");
         TTree *tree = (TTree*)fin->Get("monopoles");
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
@@ -411,10 +408,10 @@ void EcalUncertainty()
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
 	TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-	TrgAnalysis.SaveAs_csv("HLT_Photon200_SignalMC_eff.csv",NEvents);
+	TrgAnalysis.SaveAs_csv("HLT_Photon200_EcalUncer_4000_eff.csv",NEvents);
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_eff.csv",NEvents);
+	noTrgAnalysis.SaveAs_csv("NOTRG_EcalUncer_4000_eff.csv",NEvents);
 	oFile->Close();	
 	cout<<"end of the code"<<endl;
 }

@@ -1,0 +1,17 @@
+,CutFlow,
+Generated ev,14500
+        TRG, 693
+QualityCuts, 667
+       ECut, 558
+     F51Cut, 376
+ dEdXSigCut, 333
+Signal efficiency, 0.0229655
+
+
+,N1Cuts,Relative eff
+     No TRG, 3111,0.10704
+ No Quality, 369,0.902439
+    No ECut, 401,0.830424
+  No F51Cut, 521,0.639155
+ No dEdXSig, 376,0.885638
+
