@@ -2,7 +2,7 @@
 //	MonoAnalyzerPhoton.cc
 //	Created by  Shih Lin
 //	
-//	Analysis code for Photon trigger(HLT_Photon200 mainly)
+//	Analysis code for Photon trigger(HLT_Photon175 mainly)
 //
 //
 #include "iostream"
@@ -259,9 +259,8 @@ using namespace std;
 
 void MonoAnalyzerPhoton()
 {
-	TFile *oFile = new TFile("MonoPhotonAnalysis_2018_1000.root","recreate");
-
-	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoNtuple2018/1000/MonoNtuple2018_MC_1000.root");
+	TFile *oFile = new TFile("MonoPhotonAnalysis_2016_2000.root","recreate");	
+	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple2016/2000/MonoNtuple2016_MC_2000.root");
         TTree *tree = (TTree*)fin->Get("monopoles");
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
@@ -307,7 +306,7 @@ void MonoAnalyzerPhoton()
 	tree->SetBranchAddress("event",&event);
 	tree->SetBranchAddress("trigResult",&trigResults);
         tree->SetBranchAddress("trigNames",&trigNames);
-        tree->SetBranchAddress("passHLT_Photon200" , &passHLT_Photon200);
+        tree->SetBranchAddress("passHLT_Photon175" , &passHLT_Photon175);
 	tree->SetBranchAddress("passHLT_Photon175" , &passHLT_Photon175);
         tree->SetBranchAddress("passHLT_DoublePhoton70",&passHLT_DoublePhoton70);
 	tree->SetBranchAddress("cand_N",&nCandidates);
@@ -345,7 +344,7 @@ void MonoAnalyzerPhoton()
 	
 	
 	MonoCuts noTrgAnalysis("NOTRG",oFile);
-	MonoCuts TrgAnalysis("HLT_Photon200",oFile);
+	MonoCuts TrgAnalysis("HLT_Photon175",oFile);
 
 	vector<MonoCandidate> cand(10);	
 	vector<Photon> photon(0);
@@ -400,14 +399,14 @@ void MonoAnalyzerPhoton()
 			}
 		}
 			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);			
-                        TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev);
+                        TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev);
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
-	TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-	TrgAnalysis.SaveAs_csv("HLT_Photon200_SignalMC_1000_eff.csv",NEvents);
+	TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
+	TrgAnalysis.SaveAs_csv("HLT_Photon175_SignalMC_2000_eff.csv",NEvents);
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_1000_eff.csv",NEvents);
+	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_2000_eff.csv",NEvents);
 	oFile->Close();	
 	cout<<"end of the code"<<endl;
 }
