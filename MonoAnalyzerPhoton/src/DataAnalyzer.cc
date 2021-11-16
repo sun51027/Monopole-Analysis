@@ -1,5 +1,15 @@
+#include "iostream"
+#include "TAttMarker.h"
+#include "TFile.h"
+#include "TCanvas.h"
+#include "TTree.h"
+#include "TH1F.h"
+#include "math.h"
 #include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/BackgroundEstimation/Candidate_Data.h"
 #include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoAnalyzerPhoton/PlotSet.h"
+
+#include <algorithm>
+#include <string>
 using namespace std;
 enum PlotName{
   FracSatVNstrips = 0, // fraction of saturated strips vs. number of strips
