@@ -78,10 +78,10 @@ public:
   ~MonoCuts(){}
   void doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev);
   void doAnalysis_data(vector<MonoCandidate> &cand,unsigned nParticle,bool passHLT_Photon200,unsigned ev);
-  void FillNoCutHistogram(int n,vector<MonoCandidate> Cand);
+  void FillNoCutHistogram(int n,vector<MonoCandidate> Cand,bool matching);
+  void FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand,bool matching);
   void FillN1Histogram(int n, vector<MonoCandidate> N1CutCand);
-  void FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand);
-  void Matching(vector<MonoCandidate> CutFlowCand);
+  vector<MonoCandidate>  Matching(vector<MonoCandidate> CutFlowCand);
   void Clear();
   void WritePlots(TFile *oFile);
   void PrintInfo(){	
@@ -129,7 +129,7 @@ public:
   }
   void SignalEff(const string trName, double TotalEvents);
 
-  void SaveAs_csv(const string fileName, double TotalEvents, string mass){
+  void SaveAs_csv(const string fileName, double TotalEvents, string mass,string trName){
         ofstream fout(fileName);
 
         if(!fout) cout<<"Cannot open file"<<endl;
@@ -142,7 +142,6 @@ public:
         fout<<"     F51Cut, "<<f51_count<<endl;
         fout<<" dEdXSigCut, "<<dEdX_count<<endl;
         fout<<"Signal efficiency, "<<(double)dEdX_count/(double)TotalEvents<<endl;
-        fout<<endl;
         fout<<endl;
 	fout<<",N1Cuts,Relative eff"<<endl;
         fout<<"     No TRG, "<<NoTRG <<","<<(double)dEdX_count/(double)NoTRG<<endl;
