@@ -2,7 +2,7 @@
 //	MonoAnalyzerPhoton.cc
 //	Created by  Shih Lin
 //	
-//	Analysis code for Photon trigger(HLT_Photon175 mainly)
+//	Analysis code for Photon trigger(HLT_Photon200 mainly)
 //
 //
 #include "iostream"
@@ -257,10 +257,10 @@ using namespace std;
   const double MonoCuts::f51Cut_ = 0.85;
   const double MonoCuts::photonCut_ = 200;
 
-void MonoAnalyzerPhoton()
+void MonoAnalyzerPhoton(string year, string mass)
 {
-	TFile *oFile = new TFile("MonoPhotonAnalysis_2016_2000.root","recreate");	
-	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple2016/2000/MonoNtuple2016_MC_2000.root");
+	TFile *oFile = new TFile(("output/MonoPhotonAnalysis_"+year+"_"+mass+".root").c_str(),"recreate");	
+	TFile *fin = new TFile(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/"+mass+"/MonoNtuple"+year+"_MC_"+mass+".root").c_str());
         TTree *tree = (TTree*)fin->Get("monopoles");
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
@@ -306,7 +306,7 @@ void MonoAnalyzerPhoton()
 	tree->SetBranchAddress("event",&event);
 	tree->SetBranchAddress("trigResult",&trigResults);
         tree->SetBranchAddress("trigNames",&trigNames);
-        tree->SetBranchAddress("passHLT_Photon175" , &passHLT_Photon175);
+        tree->SetBranchAddress("passHLT_Photon200" , &passHLT_Photon200);
 	tree->SetBranchAddress("passHLT_Photon175" , &passHLT_Photon175);
         tree->SetBranchAddress("passHLT_DoublePhoton70",&passHLT_DoublePhoton70);
 	tree->SetBranchAddress("cand_N",&nCandidates);
@@ -344,7 +344,7 @@ void MonoAnalyzerPhoton()
 	
 	
 	MonoCuts noTrgAnalysis("NOTRG",oFile);
-	MonoCuts TrgAnalysis("HLT_Photon175",oFile);
+	MonoCuts TrgAnalysis("HLT_Photon200",oFile);
 
 	vector<MonoCandidate> cand(10);	
 	vector<Photon> photon(0);
@@ -398,15 +398,18 @@ void MonoAnalyzerPhoton()
 			);
 			}
 		}
-			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);			
-                        TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev);
+			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);		
+			if( year == "2016")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev);
+			else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev);
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
-	TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
-	TrgAnalysis.SaveAs_csv("HLT_Photon175_SignalMC_2000_eff.csv",NEvents);
+	if(year == "2016")	TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
+	else			TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
+
+	TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents);
+	
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv("NOTRG_SignalMC_2000_eff.csv",NEvents);
+	noTrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+".csv").c_str(),NEvents);
 	oFile->Close();	
-	cout<<"end of the code"<<endl;
 }

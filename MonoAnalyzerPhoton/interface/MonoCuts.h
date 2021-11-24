@@ -1,6 +1,5 @@
 #ifndef _MONOCUTS_H_
 #define _MONOCUTS_H_
-#include "Candidate.h"
 #include "PlotSet.h"
 class MonoCuts:public MonoCandidate, public Photon
 {
@@ -27,12 +26,12 @@ public:
         x.CreatPlot(F51,new TH1D("F51","",100,0.2,1.1));
         x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,10));
         x.CreatPlot(ABCD,new TH2D("ABCD","",100,0,1.1,100,0,30));
-	 
-	cutName_[0] = "Quality_";
-	 cutName_[1] = "Energy_";
-	 cutName_[2] = "F51_";
-	 cutName_[3] = "dEdxSig_";
-	 cutName_[4] = "HLT_";
+	cout<<"Create Plots successfully"<<endl;
+ 	cutName_[0] = "Quality_";
+ 	cutName_[1] = "Energy_";
+	cutName_[2] = "F51_";
+	cutName_[3] = "dEdxSig_";
+	cutName_[4] = "HLT_";
 	
         n_1Plot.resize(nCut);
 
@@ -78,6 +77,7 @@ public:
 
   ~MonoCuts(){}
   void doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev);
+  void doAnalysis_data(vector<MonoCandidate> &cand,unsigned nParticle,bool passHLT_Photon200,unsigned ev);
   void FillNoCutHistogram(int n,vector<MonoCandidate> Cand);
   void FillN1Histogram(int n, vector<MonoCandidate> N1CutCand);
   void FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand);
@@ -129,12 +129,12 @@ public:
   }
   void SignalEff(const string trName, double TotalEvents);
 
-  void SaveAs_csv(const string fileName, double TotalEvents){
+  void SaveAs_csv(const string fileName, double TotalEvents, string mass){
         ofstream fout(fileName);
 
         if(!fout) cout<<"Cannot open file"<<endl;
         else    cout<<"Open file successfully"<<endl;
-	fout<<",CutFlow,"<<endl;
+	fout<<mass+" "+trName<<",CutFlow,"<<endl;
         fout<<"Generated ev,"<<TotalEvents<<endl;
         fout<<"        TRG, "<<count<<endl;
         fout<<"QualityCuts, "<<Qual_count<<endl;
@@ -198,12 +198,19 @@ private:
   bool evalF51(MonoCandidate &mc) { return mc.f51_ > f51Cut_ ; }
   bool evaldEdX(MonoCandidate &mc) { return mc.dEdXSig_ > dEdXSigCut_ ;}
   bool evalPhoton(Photon &mc){ return mc.pho_pt_ > photonCut_; }
+  //---preselection for data
+  bool evalPreselection(MonoCandidate &mc) { return TMath::Abs(mc.xyp0_) < xyp0Cut_ && TMath::Abs(mc.xyp2_) > xyp2Cut_ 
+			&& mc.dist_ < distCut_  && mc.hIso_ <hIsoCut_  
+			&& TMath::Abs( mc.rzp2_) < rzp2Cut_ && TMath::Abs(mc.rzp1_) < rzp1Cut_ && TMath::Abs(mc.rzp0_) < rzp0Cut_
+			&& mc.e55_ > e55Cut_ && mc.dEdXSig_ > dEdXSigCut_;  }
  
   vector<MonoCandidate> CutFlowCand_TRG;
   vector<MonoCandidate> CutFlowCand_Qual;
   vector<MonoCandidate> CutFlowCand_Energy;
   vector<MonoCandidate> CutFlowCand_F51;
   vector<MonoCandidate> CutFlowCand_Dedx;
+  //for data
+  vector<MonoCandidate> Preselection;
 
   vector<MonoCandidate> N1CutCand_TRG;
   vector<MonoCandidate> N1CutCand_Qual;
