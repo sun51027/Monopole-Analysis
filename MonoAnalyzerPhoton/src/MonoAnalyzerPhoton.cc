@@ -67,33 +67,32 @@ using namespace std;
 	if(CutFlowCand_TRG.size()>0) 
 	{
 		count++;
-		FillNoCutHistogram(0,CutFlowCand_TRG);
+		FillNoCutHistogram(0,CutFlowCand_TRG,1);
 	}
         sort(CutFlowCand_Qual.begin(),CutFlowCand_Qual.begin()+CutFlowCand_Qual.size());
 	if(CutFlowCand_Qual.size()>0) 
 	{
 		Qual_count++;	
-		FillFlowHistogram(0,CutFlowCand_Qual);
+		FillFlowHistogram(0,CutFlowCand_Qual,1);
 	}
 	
         sort(CutFlowCand_Energy.begin(),CutFlowCand_Energy.begin()+CutFlowCand_Energy.size());
 	if(CutFlowCand_Energy.size()>0)
 	{
 		E_count++;	
-		FillFlowHistogram(1,CutFlowCand_Energy);
+		FillFlowHistogram(1,CutFlowCand_Energy,1);
 	}
         sort(CutFlowCand_F51.begin(),CutFlowCand_F51.begin()+CutFlowCand_F51.size());
 	if(CutFlowCand_F51.size()>0)
 	{
 		f51_count++;	
-		FillFlowHistogram(2,CutFlowCand_F51);
+		FillFlowHistogram(2,CutFlowCand_F51,1);
 	}
 	sort(CutFlowCand_Dedx.begin(),CutFlowCand_Dedx.begin()+CutFlowCand_Dedx.size());
 	if(CutFlowCand_Dedx.size()>0)
 	{
 		dEdX_count++;	
-		FillFlowHistogram(3,CutFlowCand_Dedx);
-		Matching(CutFlowCand_Dedx);
+		FillFlowHistogram(3,CutFlowCand_Dedx,1);
 	}
 	///////////////////////////////////////////////////
 	/////////  N1 Cut Plots and  Count   //////////////
@@ -133,17 +132,61 @@ using namespace std;
 		NoTRG++;
 	}
   }
-  void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand){
+  void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matching){
 	PlotSet &z = NoCutPlot[n];
-	for(int i=0; i < Cand.size() ;i++){
-	  z.GetPlot(FracSatVNstrips)->Fill(Cand[i].subHits_,Cand[i].subSatHits_/Cand[i].subHits_);
-	  z.GetPlot(DedXSig)->Fill(Cand[i].dEdXSig_);
-	  z.GetPlot(RZcurv)->Fill(Cand[i].rzp2_);
-          z.GetPlot(E55)->Fill(Cand[i].e55_);
-	  z.GetPlot(F51)->Fill(Cand[i].f51_);
-          z.GetPlot(HcalIso)->Fill(Cand[i].hIso_);
-          z.GetPlot(ABCD)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+	vector<MonoCandidate> Matched;
+	if (matching == 1){
+		Matched = Matching(Cand);	
+		for(int i=0; i < Matched.size() ;i++){
+	  	  z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
+	   	  z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
+	   	  z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
+           	  z.GetPlot(E55)->Fill(Matched[i].e55_);
+	   	  z.GetPlot(F51)->Fill(Matched[i].f51_);
+           	  z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
+           	  z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		}
 	}
+	else{
+		for(int i=0; i < Cand.size() ;i++){
+		  z.GetPlot(FracSatVNstrips)->Fill(Cand[i].subHits_,Cand[i].subSatHits_/Cand[i].subHits_);
+		  z.GetPlot(DedXSig)->Fill(Cand[i].dEdXSig_);
+		  z.GetPlot(RZcurv)->Fill(Cand[i].rzp2_);
+        	  z.GetPlot(E55)->Fill(Cand[i].e55_);
+		  z.GetPlot(F51)->Fill(Cand[i].f51_);
+        	  z.GetPlot(HcalIso)->Fill(Cand[i].hIso_);
+        	  z.GetPlot(ABCD)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+		}
+	}
+	Matched.clear();
+  }
+  void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool matching){
+	PlotSet &z = CutFlow[n];
+	vector<MonoCandidate> Matched;
+	if (matching == 1){
+		Matched = Matching(CutFlowCand);	
+		for(int i=0; i < Matched.size() ;i++){
+	  	  z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
+	   	  z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
+	   	  z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
+           	  z.GetPlot(E55)->Fill(Matched[i].e55_);
+	   	  z.GetPlot(F51)->Fill(Matched[i].f51_);
+           	  z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
+           	  z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		}
+	}
+	else{
+		for(int i=0; i < CutFlowCand.size() ;i++){
+		  z.GetPlot(FracSatVNstrips)->Fill(CutFlowCand[i].subHits_,CutFlowCand[i].subSatHits_/CutFlowCand[i].subHits_);
+		  z.GetPlot(DedXSig)->Fill(CutFlowCand[i].dEdXSig_);
+		  z.GetPlot(RZcurv)->Fill(CutFlowCand[i].rzp2_);
+        	  z.GetPlot(E55)->Fill(CutFlowCand[i].e55_);
+		  z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
+        	  z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
+        	  z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+		}
+	}
+	Matched.clear();
   }
   void MonoCuts::FillN1Histogram(int n, vector<MonoCandidate> N1CutCand){
 	PlotSet &z = n_1Plot[n];
@@ -157,29 +200,20 @@ using namespace std;
           z.GetPlot(ABCD)->Fill(N1CutCand[i].f51_,N1CutCand[i].dEdXSig_);
 	}
   }
-  void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand){
-	PlotSet &z = CutFlow[n];
-	for(int i=0; i < CutFlowCand.size() ;i++){
-	  z.GetPlot(FracSatVNstrips)->Fill(CutFlowCand[i].subHits_,CutFlowCand[i].subSatHits_/CutFlowCand[i].subHits_);
-	  z.GetPlot(DedXSig)->Fill(CutFlowCand[i].dEdXSig_);
-	  z.GetPlot(RZcurv)->Fill(CutFlowCand[i].rzp2_);
-          z.GetPlot(E55)->Fill(CutFlowCand[i].e55_);
-	  z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
-          z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
-          z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
-	}
-  }
-  void MonoCuts::Matching(vector<MonoCandidate> CutFlowCand){
-	   for(int i=0; i<CutFlowCand.size();i++){
+  vector<MonoCandidate> MonoCuts::Matching(vector<MonoCandidate> Cand){
 
+	   vector<MonoCandidate> Matched;
+
+	   for(int i=0; i<Cand.size();i++){
 		double m_deltaR=0;
 		double am_deltaR=0;
-		m_deltaR = sqrt(pow(CutFlowCand[i].eta_-CutFlowCand[0].mono_eta_,2)+
-				pow(CutFlowCand[i].phi_-CutFlowCand[0].mono_phi_,2));
-		am_deltaR= sqrt(pow(CutFlowCand[i].eta_-CutFlowCand[0].amon_eta_,2)+
-                                pow(CutFlowCand[i].phi_-CutFlowCand[0].amon_phi_,2));
+		m_deltaR = sqrt(pow(Cand[i].eta_-Cand[0].mono_eta_,2)+
+				pow(Cand[i].phi_-Cand[0].mono_phi_,2));
+		am_deltaR= sqrt(pow(Cand[i].eta_-Cand[0].amon_eta_,2)+
+                                pow(Cand[i].phi_-Cand[0].amon_phi_,2));
 
 		if(m_deltaR<0.15||am_deltaR<0.15){
+			Matched.push_back(Cand[i]);		
 			Reco++;
 			Flag=1;
 		}
@@ -187,6 +221,7 @@ using namespace std;
 	   if(Flag==1)	      MatchedEvent++;
 	
 	Flag=0;
+	return Matched;
   }
   void MonoCuts::Clear(){
 
@@ -399,17 +434,21 @@ void MonoAnalyzerPhoton(string year, string mass)
 			}
 		}
 			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);		
-			if( year == "2016")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev);
+			if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev);
 			else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev);
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
-	if(year == "2016")	TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
-	else			TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-
-	TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents);
+	if(year == "2016" || year == "2016APV"){
+		TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
+//		TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents,mass,"HLT_Photon175");
+	}
+	else{
+		TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
+//		TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents,mass,"HLT_Photon200");
+	}
 	
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+".csv").c_str(),NEvents);
+//	noTrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+".csv").c_str(),NEvents,mass,"NoTrg");
 	oFile->Close();	
 }
