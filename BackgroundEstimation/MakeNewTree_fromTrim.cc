@@ -2,16 +2,22 @@
 //
 //	Build New tree without Signal region
 //	Only background
+//
+//	 1 = Loose cut dEdx < 7 f51 < 0.6
+//	 2 = tight cut dEdx < 9 f51 < 0.85
+//	 3 = Ublind
 //	
 //	Built by Shih Lin 2021 10 27
 //
 /////////////////////////
-void MakeNewTree_fromTrim()
+void MakeNewTree_fromTrim(int option, string dataset)
 {
-	TFile *oFile = new TFile("MonopoleData2018C.root","recreate");
-	TTree *NewTree = new TTree("monopoles","Blinded data");
-	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Data/data_2018/Monopole2018Data_C_trimmed.root");
+	TFile *fin = new TFile(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Data/data_2018/Monopole2018Data_"+dataset+"_trimmed.root").c_str());
         TTree *tree = (TTree*)fin->Get("monopoles");
+
+ 	TFile *oFile = new TFile(("../Data/Blind/BlindedData_2018"+dataset+".root").c_str(),"recreate");
+	TTree *NewTree = new TTree("monopoles","Blinded data");
+
         float passHLT_Photon200;
         float Run=0;
         float Event=0;
@@ -94,9 +100,17 @@ void MakeNewTree_fromTrim()
 		tree->GetEntry(ev);
 		//Blind signal region
 		dEdxSig = sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits)));
-		if(dEdxSig > 9 && seedFrac > 0.85){
-			SignalFlag = 1;
-			continue;
+		if(option == 1){
+			if(dEdxSig > 7 && seedFrac > 0.6){
+				SignalFlag = 1;
+				continue;
+			}
+		}
+		else if(option == 2){
+			if(dEdxSig > 9 && seedFrac > 0.85){
+				SignalFlag = 1;
+				continue;
+			}
 		}
 		if(Event!=LastEvent){//only diff events will enteri
 		    if(LastEvent > -1 && SignalFlag != 1){	
@@ -150,9 +164,9 @@ void MakeNewTree_fromTrim()
 			NewTree->Fill();
 		}
 			
-	   if(ev%100000==0) cout << ev << " / " << tree->GetEntries() << endl;
+	   if(ev%1000000==0) cout << ev << " / " << tree->GetEntries() << endl;
 	} // end of entry loop
-	cout<<"total p "<<totalp<<endl;
+	cout<<"finish option "<<option<<" dataset "<<dataset<<endl;
 	oFile->cd();
 	NewTree->Write();
 

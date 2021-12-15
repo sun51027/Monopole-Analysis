@@ -145,7 +145,7 @@ public:
 
 
         x.CreatPlot(NoSelectionDeltaR,new TH1D("NoSelectionDeltaR","",100,0,1));
-        x.CreatPlot(SelectedDeltaR,new TH1D("SelectedDeltaR","",100,0,1));
+        x.CreatPlot(SelectedDeltaR,new TH1D("SelectedDeltaR","",100,0,5));
 
 
 
@@ -469,7 +469,7 @@ void MonoDrawDeltaR()
 	TFile *oFile = new TFile("Monopole_DeltaR.root","recreate");
 	cout<<"new file line pass"<<endl;
 
-	TFile *fin = new TFile("MonoNtuple2018_MC_1000.root");
+	TFile *fin = new TFile("../MCNtuple2018/1000/MonoNtuple2018_MC_1000.root");
 	cout<<"open file success"<<endl;
         TTree *tree = (TTree*)fin->Get("monopoles");
 	cout<<"open tree success"<<endl;
@@ -626,7 +626,7 @@ void MonoDrawDeltaR()
 			(*pho_eta)[j],
 			(*pho_phi)[j],
 			(*pho_pt)[j]
-			);
+			;
 			}
 		}
 			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);			

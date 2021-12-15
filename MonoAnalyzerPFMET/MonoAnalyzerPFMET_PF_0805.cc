@@ -877,7 +877,7 @@ void MonoAnalyzerPFMET_PF_0805()
 	TFile *oFile = new TFile("Monopole_PFMET_PF_1000.root","recreate");
 	cout<<"new file line pass"<<endl;
 
-	TFile *fin = new TFile("MonoNtuple2018_MC_1000_0804.root");
+	TFile *fin = new TFile("../MCNtuple2018/1000/MonoNtuple2018_MC_1000.root");
 	cout<<"open file success"<<endl;
         TTree *tree = (TTree*)fin->Get("monopoles");
 	cout<<"open tree success"<<endl;
