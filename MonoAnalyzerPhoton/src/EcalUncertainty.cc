@@ -1,14 +1,11 @@
-//////////////////////////////////
 //
-//	File name: MonoAnalyzerPhoton.cc
-//	author: Shih Lin
-//	Content: **Mainly for analyzing HLT_Photon200 trigger**
-//		   (the original analysis)
-//		 the significance plots for every cuts
-//		 count efficiency for every cuts
-//		 Matching(21/2/25 update)
-//		 Update file name (June 5 2021) 
-/////////////////////////////////////////////////////
+//	EcalUncertainty.cc
+//	Created by  Shih Lin
+//	
+//	Analysis code for Photon trigger(HLT_Photon200 mainly)
+//	root -l -q 'EcalUncertainty.cc("2018","1000")'
+//
+//
 #include "iostream"
 #include "TAttMarker.h"
 #include "TFile.h"
@@ -18,15 +15,14 @@
 #include "math.h"
 #include <algorithm>
 #include <string>
-#include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoAnalyzerPhoton/interface/Candidate.h"
-#include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoAnalyzerPhoton/interface/PlotSet.h"
-#include "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MonoAnalyzerPhoton/interface/MonoCuts.h"
+#include "../interface/Candidate.h"
+#include "../interface/PlotSet.h"
+#include "../interface/MonoCuts.h"
 using namespace std;
 
   void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev)
   {
 	Clear();
-//	cout<<"ev "<<ev<<", cand number "<<nCandidates<<endl;
 
      for(unsigned c=0;c<nCandidates;c++){
 
@@ -37,7 +33,6 @@ using namespace std;
 	bool dEdXCut = evaldEdX(cands);
 
 	//count for total events without TRG	
-
 	if(TRG) CutFlowCand_TRG.push_back(cands);
 	//N-1 cut and relative efficiency
         if( ECut && F51Cut && dEdXCut &&TRG) N1CutCand_Qual.push_back(cands); 
@@ -59,136 +54,118 @@ using namespace std;
 	
       }//for cand loop
 
-    	
-    if(nPhoton!=0){
-    for(unsigned p=0;p<nPhoton;p++){
-	Photon &photon = pho[p];
-	bool PhotonPtCut = evalPhoton(photon);
-	if(PhotonPtCut) HighPtPhoton.push_back(photon);
-    }
-    }
 	//cut flow events calculating
+	//the last option is bool, 0 for NOT matching, 1 for MATCHING
         sort(CutFlowCand_TRG.begin(),CutFlowCand_TRG.begin()+CutFlowCand_TRG.size());
-	
 	if(CutFlowCand_TRG.size()>0) 
 	{
 		count++;
-		FillNoCutHistogram(0,CutFlowCand_TRG);
+		FillNoCutHistogram(0,CutFlowCand_TRG,0);
 	}
         sort(CutFlowCand_Qual.begin(),CutFlowCand_Qual.begin()+CutFlowCand_Qual.size());
 	if(CutFlowCand_Qual.size()>0) 
 	{
 		Qual_count++;	
-		FillFlowHistogram(0,CutFlowCand_Qual);
+		FillFlowHistogram(0,CutFlowCand_Qual,0);
 	}
 	
         sort(CutFlowCand_Energy.begin(),CutFlowCand_Energy.begin()+CutFlowCand_Energy.size());
 	if(CutFlowCand_Energy.size()>0)
 	{
 		E_count++;	
-		FillFlowHistogram(1,CutFlowCand_Energy);
+		FillFlowHistogram(1,CutFlowCand_Energy,0);
 	}
         sort(CutFlowCand_F51.begin(),CutFlowCand_F51.begin()+CutFlowCand_F51.size());
 	if(CutFlowCand_F51.size()>0)
 	{
 		f51_count++;	
-		FillFlowHistogram(2,CutFlowCand_F51);
+		FillFlowHistogram(2,CutFlowCand_F51,0);
 	}
 	sort(CutFlowCand_Dedx.begin(),CutFlowCand_Dedx.begin()+CutFlowCand_Dedx.size());
 	if(CutFlowCand_Dedx.size()>0)
 	{
 		dEdX_count++;	
-		FillFlowHistogram(3,CutFlowCand_Dedx);
-		Matching(CutFlowCand_Dedx);
-	}
-	///////////////////////////////////////////////////
-	/////////  N1 Cut Plots and  Count   //////////////
-	///////////////////////////////////////////////////
-
-
-	//count n_1Plot TRG+Qual and get plots
-        sort(N1CutCand_Qual.begin(),N1CutCand_Qual.begin()+N1CutCand_Qual.size());
-	if(N1CutCand_Qual.size()>0) 
-	{
-		FillN1Histogram(0,N1CutCand_Qual);
-		NoQual++;
-	}
-	sort(N1CutCand_Energy.begin(),N1CutCand_Energy.begin()+N1CutCand_Energy.size());
-	if(N1CutCand_Energy.size()>0)
-	{
-		FillN1Histogram(1,N1CutCand_Energy);
-		NoE++;	
-	}
-        sort(N1CutCand_F51.begin(),N1CutCand_F51.begin()+N1CutCand_F51.size());
-	if(N1CutCand_F51.size()>0)
-	{
-		FillN1Histogram(2,N1CutCand_F51);
-		NoF51++;	
-	}
-	sort(N1CutCand_Dedx.begin(),N1CutCand_Dedx.begin()+N1CutCand_Dedx.size());
-	if(N1CutCand_Dedx.size()>0)
-	{
-	
-		FillN1Histogram(3,N1CutCand_Dedx);
-		NodEdXCut++;	
-	}
-        sort(N1CutCand_TRG.begin(),N1CutCand_TRG.begin()+N1CutCand_TRG.size());
-	if(N1CutCand_TRG.size()>0) 
-	{
-		FillN1Histogram(4,N1CutCand_TRG);
-		NoTRG++;
+		FillFlowHistogram(3,CutFlowCand_Dedx,0);
 	}
   }
-  void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand){
+  void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matching){
 	PlotSet &z = NoCutPlot[n];
-	for(int i=0; i < Cand.size() ;i++){
-	  z.GetPlot(FracSatVNstrips)->Fill(Cand[i].subHits_,Cand[i].subSatHits_/Cand[i].subHits_);
-	  z.GetPlot(DedXSig)->Fill(Cand[i].dEdXSig_);
-	  z.GetPlot(RZcurv)->Fill(Cand[i].rzp2_);
-          z.GetPlot(E55)->Fill(Cand[i].e55_);
-	  z.GetPlot(F51)->Fill(Cand[i].f51_);
-          z.GetPlot(HcalIso)->Fill(Cand[i].hIso_);
-          z.GetPlot(ABCD)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+	vector<MonoCandidate> Matched;
+	if (matching == 1){
+		Matched = Matching(Cand);	
+		for(int i=0; i < Matched.size() ;i++){
+	  	  z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
+	   	  z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
+	   	  z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
+           	  z.GetPlot(E55)->Fill(Matched[i].e55_);
+	   	  z.GetPlot(F51)->Fill(Matched[i].f51_);
+           	  z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
+           	  z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		}
 	}
-  }
-  void MonoCuts::FillN1Histogram(int n, vector<MonoCandidate> N1CutCand){
-	PlotSet &z = n_1Plot[n];
-	for(int i=0; i < N1CutCand.size() ;i++){
-	  z.GetPlot(FracSatVNstrips)->Fill(N1CutCand[i].subHits_,N1CutCand[i].subSatHits_/N1CutCand[i].subHits_);
-	  z.GetPlot(DedXSig)->Fill(N1CutCand[i].dEdXSig_);
-	  z.GetPlot(RZcurv)->Fill(N1CutCand[i].rzp2_);
-          z.GetPlot(E55)->Fill(N1CutCand[i].e55_);
-	  z.GetPlot(F51)->Fill(N1CutCand[i].f51_);
-          z.GetPlot(HcalIso)->Fill(N1CutCand[i].hIso_);
-          z.GetPlot(ABCD)->Fill(N1CutCand[i].f51_,N1CutCand[i].dEdXSig_);
+	else{
+		for(int i=0; i < Cand.size() ;i++){
+		  z.GetPlot(FracSatVNstrips)->Fill(Cand[i].subHits_,Cand[i].subSatHits_/Cand[i].subHits_);
+		  z.GetPlot(DedXSig)->Fill(Cand[i].dEdXSig_);
+		  z.GetPlot(RZcurv)->Fill(Cand[i].rzp2_);
+        	  z.GetPlot(E55)->Fill(Cand[i].e55_);
+		  z.GetPlot(F51)->Fill(Cand[i].f51_);
+        	  z.GetPlot(HcalIso)->Fill(Cand[i].hIso_);
+        	  z.GetPlot(ABCD)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+		}
 	}
+	Matched.clear();
   }
-  void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand){
+  void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool matching){
 	PlotSet &z = CutFlow[n];
-	for(int i=0; i < CutFlowCand.size() ;i++){
-	  z.GetPlot(FracSatVNstrips)->Fill(CutFlowCand[i].subHits_,CutFlowCand[i].subSatHits_/CutFlowCand[i].subHits_);
-	  z.GetPlot(DedXSig)->Fill(CutFlowCand[i].dEdXSig_);
-	  z.GetPlot(RZcurv)->Fill(CutFlowCand[i].rzp2_);
-          z.GetPlot(E55)->Fill(CutFlowCand[i].e55_);
-	  z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
-          z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
-          z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+	vector<MonoCandidate> Matched;
+	if (matching == 1){
+		Matched = Matching(CutFlowCand);	
+		for(int i=0; i < Matched.size() ;i++){
+	  	  z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
+	   	  z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
+	   	  z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
+           	  z.GetPlot(E55)->Fill(Matched[i].e55_);
+	   	  z.GetPlot(F51)->Fill(Matched[i].f51_);
+           	  z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
+           	  z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		}
 	}
+	else{
+		for(int i=0; i < CutFlowCand.size() ;i++){
+		  z.GetPlot(FracSatVNstrips)->Fill(CutFlowCand[i].subHits_,CutFlowCand[i].subSatHits_/CutFlowCand[i].subHits_);
+		  z.GetPlot(DedXSig)->Fill(CutFlowCand[i].dEdXSig_);
+		  z.GetPlot(RZcurv)->Fill(CutFlowCand[i].rzp2_);
+        	  z.GetPlot(E55)->Fill(CutFlowCand[i].e55_);
+		  z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
+        	  z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
+        	  z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+		}
+	}
+	Matched.clear();
   }
-  void MonoCuts::Matching(vector<MonoCandidate> CutFlowCand){
-	   for(int i=0; i<CutFlowCand.size();i++){
+  vector<MonoCandidate> MonoCuts::Matching(vector<MonoCandidate> Cand){
 
+	   vector<MonoCandidate> Matched;
+
+	   for(int i=0; i<Cand.size();i++){
 		double m_deltaR=0;
 		double am_deltaR=0;
-		m_deltaR = sqrt(pow(CutFlowCand[i].eta_-CutFlowCand[0].mono_eta_,2)+
-				pow(CutFlowCand[i].phi_-CutFlowCand[0].mono_phi_,2));
-		am_deltaR= sqrt(pow(CutFlowCand[i].eta_-CutFlowCand[0].amon_eta_,2)+
-                                pow(CutFlowCand[i].phi_-CutFlowCand[0].amon_phi_,2));
+		m_deltaR = sqrt(pow(Cand[i].eta_-Cand[0].mono_eta_,2)+
+				pow(Cand[i].phi_-Cand[0].mono_phi_,2));
+		am_deltaR= sqrt(pow(Cand[i].eta_-Cand[0].amon_eta_,2)+
+                                pow(Cand[i].phi_-Cand[0].amon_phi_,2));
 
-		if(m_deltaR<0.15) 	Reco++;
-		else if(am_deltaR<0.15) Reco++;
-		
+		if(m_deltaR<0.15||am_deltaR<0.15){
+			Matched.push_back(Cand[i]);		
+			Reco++;
+			Flag=1;
+		}
 	   }
+	   if(Flag==1)	      MatchedEvent++;
+	
+	Flag=0;
+	return Matched;
   }
   void MonoCuts::Clear(){
 
@@ -209,10 +186,8 @@ using namespace std;
 	oFile->cd(trigName_.c_str());
 	NoCutPlot[0].WritePlot();
 	for(unsigned c=0; c<nCut; c++) n_1Plot[c].WritePlot();
-        cout<<"n-1cut pass writeplots func"<<endl;
 
 	for(unsigned c=0; c<nCut; c++) CutFlow[c].WritePlot();
-	cout<<"cutflow pass writeplots func"<<endl;
 	
   }
   void MonoCuts::SignalEff(const string trName, double TotalEvents)
@@ -243,6 +218,7 @@ using namespace std;
         cout<<"     F51Cut "<<(double)dEdX_count/(double)NoF51<<endl;
         cout<<" dEdXSigCut "<<(double)dEdX_count/(double)NodEdXCut<<endl;
         cout<<endl;
+	cout<<"Total reconstructed event "<<MatchedEvent<<endl;
 	  
       cout<<endl;
   }
@@ -260,12 +236,12 @@ using namespace std;
   const double MonoCuts::f51Cut_ = 0.85;
   const double MonoCuts::photonCut_ = 200;
 
-void EcalUncertainty()
+void EcalUncertainty(string year, string mass)
 {
-	TFile *oFile = new TFile("./output/EcalSystematicAnalysis_2018_4000.root","recreate");
+	TFile *oFile = new TFile(("output/EcalUncertainty_Analysis_"+year+"_"+mass+"_NoMatched.root").c_str(),"recreate");
+	TChain *tree = new TChain("monopoles");	
+	tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/ECal/"+year+"/"+mass+"/EcalSystematic_"+year+"_"+mass+"_*.root").c_str());
 
-	TFile *fin = new TFile("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/ECal/4000/EcalSystematic_2018_4000.root");
-        TTree *tree = (TTree*)fin->Get("monopoles");
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
 	Bool_t passHLT_DoublePhoton70;
@@ -353,7 +329,6 @@ void EcalUncertainty()
 	vector<MonoCandidate> cand(10);	
 	vector<Photon> photon(0);
 
-	cout<<"total events "<<NEvents<<endl;	
         for(unsigned ev=0; ev<NEvents;ev++){
 
 		if(ev%1000==0)	cout<<ev<<"/"<<NEvents<<endl;
@@ -403,15 +378,22 @@ void EcalUncertainty()
 			);
 			}
 		}
-			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);			
-                        TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev);
+			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);		
+			if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev);
+			else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev);
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
-	TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-	TrgAnalysis.SaveAs_csv("HLT_Photon200_EcalUncer_4000_eff.csv",NEvents);
+	if(year == "2016" || year == "2016APV"){
+		TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
+		TrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents,mass,"HLT_Photon175");
+	}
+	else{
+		TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
+		TrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents,mass,"HLT_Photon200");
+	}
+	
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv("NOTRG_EcalUncer_4000_eff.csv",NEvents);
+	noTrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+".csv").c_str(),NEvents,mass,"NoTrg");
 	oFile->Close();	
-	cout<<"end of the code"<<endl;
 }

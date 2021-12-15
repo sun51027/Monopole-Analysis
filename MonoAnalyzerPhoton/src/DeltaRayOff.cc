@@ -1,9 +1,9 @@
 //
-//	MonoAnalyzerPhoton.cc
+//	DeltaRayOff.cc
 //	Created by  Shih Lin
 //	
 //	Analysis code for Photon trigger(HLT_Photon200 mainly)
-//
+//	root -l -q 'DeltaRayOff.cc("2018","1000")'
 //
 #include "iostream"
 #include "TAttMarker.h"
@@ -67,32 +67,32 @@ using namespace std;
 	if(CutFlowCand_TRG.size()>0) 
 	{
 		count++;
-		FillNoCutHistogram(0,CutFlowCand_TRG,1);
+		FillNoCutHistogram(0,CutFlowCand_TRG,0);
 	}
         sort(CutFlowCand_Qual.begin(),CutFlowCand_Qual.begin()+CutFlowCand_Qual.size());
 	if(CutFlowCand_Qual.size()>0) 
 	{
 		Qual_count++;	
-		FillFlowHistogram(0,CutFlowCand_Qual,1);
+		FillFlowHistogram(0,CutFlowCand_Qual,0);
 	}
 	
         sort(CutFlowCand_Energy.begin(),CutFlowCand_Energy.begin()+CutFlowCand_Energy.size());
 	if(CutFlowCand_Energy.size()>0)
 	{
 		E_count++;	
-		FillFlowHistogram(1,CutFlowCand_Energy,1);
+		FillFlowHistogram(1,CutFlowCand_Energy,0);
 	}
         sort(CutFlowCand_F51.begin(),CutFlowCand_F51.begin()+CutFlowCand_F51.size());
 	if(CutFlowCand_F51.size()>0)
 	{
 		f51_count++;	
-		FillFlowHistogram(2,CutFlowCand_F51,1);
+		FillFlowHistogram(2,CutFlowCand_F51,0);
 	}
 	sort(CutFlowCand_Dedx.begin(),CutFlowCand_Dedx.begin()+CutFlowCand_Dedx.size());
 	if(CutFlowCand_Dedx.size()>0)
 	{
 		dEdX_count++;	
-		FillFlowHistogram(3,CutFlowCand_Dedx,1);
+		FillFlowHistogram(3,CutFlowCand_Dedx,0);
 	}
 	///////////////////////////////////////////////////
 	/////////  N1 Cut Plots and  Count   //////////////
@@ -294,8 +294,8 @@ using namespace std;
 
 void DeltaRayOff(string year, string mass)
 {
-	TFile *oFile = new TFile(("output/DeltaRayOff_Analysis_"+year+"_"+mass+".root").c_str(),"recreate");	
-	TFile *fin = new TFile(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DeltaRayOff/"+year+"/"+mass+"/DeltaRayOff"+year+"_"+mass+".root").c_str());
+	TFile *oFile = new TFile(("output/DeltaRayOff_Analysis_"+year+"_"+mass+"_NoMatched.root").c_str(),"recreate");	
+	TFile *fin = new TFile(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DeltaRayOff/"+year+"/"+mass+"/DeltaRayOff_"+year+"_"+mass+".root").c_str());
         TTree *tree = (TTree*)fin->Get("monopoles");
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;

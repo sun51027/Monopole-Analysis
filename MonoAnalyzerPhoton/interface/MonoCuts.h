@@ -26,6 +26,14 @@ public:
         x.CreatPlot(F51,new TH1D("F51","",100,0.2,1.1));
         x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,10));
         x.CreatPlot(ABCD,new TH2D("ABCD","",100,0,1.1,100,0,30));
+
+        NoCutProfile.resize(10);
+        PlotSet &p = NoCutProfile[0];
+	cout<<"p "<<&p<<endl;
+        p.CreatProfile(EcalBarrel,new TProfile("EcalBarrel","",30,0,1.1,0,30));
+        p.CreatProfile(EcalEndCup,new TProfile("EcalEndCup","",30,0,1.1,0,30));
+        p.CreatProfile(EcalAll ,new TProfile("EcalAll","",30,0,1.1,0,30));
+
 	cout<<"Create Plots successfully"<<endl;
  	cutName_[0] = "Quality_";
  	cutName_[1] = "Energy_";
@@ -37,40 +45,46 @@ public:
 
 	for( int c = 0; c <nCut ;c++){
 
-	string cutn1name = "N1_"+ cutName_[c];	//N_1_HLT_Quality_FracSatVNstrips
-	PlotSet &z = n_1Plot[c];//[1] = Quality,[2]energy, [3] f51, [4]dEdx
-	
-	z.CreatPlot(FracSatVNstrips,new TH2D((cutn1name+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
-	z.CreatPlot(DedXSig,new TH1D((cutn1name+"DedXSig").c_str(),"",100,0,30));
-        z.CreatPlot(XYPar0,new TH1D((cutn1name+"XYPar0").c_str(),"",100,-1,1));
-        z.CreatPlot(XYPar2,new TH1D((cutn1name+"XYPar2").c_str(),"",100,-20000,20000));
-        z.CreatPlot(RZPar0,new TH1D((cutn1name+"RZPar0").c_str(),"",100,-20,20));
-        z.CreatPlot(RZPar1,new TH1D((cutn1name+"RZPar1").c_str(),"",100,-1,100));
-	z.CreatPlot(RZcurv,new TH1D((cutn1name+"RZcurv").c_str(),"",100,-0.01,0.01));
-        z.CreatPlot(E55,new TH1D((cutn1name+"E55").c_str(),"",100,-1,1200));
-        z.CreatPlot(F51,new TH1D((cutn1name+"F51").c_str(),"",100,0.2,1.1));
-        z.CreatPlot(HcalIso,new TH1D((cutn1name+"HcalIso").c_str(),"",100,-1,10));
-        z.CreatPlot(ABCD,new TH2D((cutn1name+"ABCD").c_str(),"",100,0,1.1,100,0,30));
+	   string cutn1name = "N1_"+ cutName_[c];	//N_1_HLT_Quality_FracSatVNstrips
+	   PlotSet &z = n_1Plot[c];//[1] = Quality,[2]energy, [3] f51, [4]dEdx
+	   z.CreatPlot(FracSatVNstrips,new TH2D((cutn1name+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
+	   z.CreatPlot(DedXSig,new TH1D((cutn1name+"DedXSig").c_str(),"",100,0,30));
+           z.CreatPlot(XYPar0,new TH1D((cutn1name+"XYPar0").c_str(),"",100,-1,1));
+           z.CreatPlot(XYPar2,new TH1D((cutn1name+"XYPar2").c_str(),"",100,-20000,20000));
+           z.CreatPlot(RZPar0,new TH1D((cutn1name+"RZPar0").c_str(),"",100,-20,20));
+           z.CreatPlot(RZPar1,new TH1D((cutn1name+"RZPar1").c_str(),"",100,-1,100));
+	   z.CreatPlot(RZcurv,new TH1D((cutn1name+"RZcurv").c_str(),"",100,-0.01,0.01));
+           z.CreatPlot(E55,new TH1D((cutn1name+"E55").c_str(),"",100,-1,1200));
+           z.CreatPlot(F51,new TH1D((cutn1name+"F51").c_str(),"",100,0.2,1.1));
+           z.CreatPlot(HcalIso,new TH1D((cutn1name+"HcalIso").c_str(),"",100,-1,10));
+           z.CreatPlot(ABCD,new TH2D((cutn1name+"ABCD").c_str(),"",100,0,1.1,100,0,30));
 	}
 
-	CutFlow.resize(nCut); 
+	CutFlow.resize(10); 
+        Profile.resize(100);
 	for( int c = 0;c<nCut-1;c++){
-	// nCut-1 is for ignoring HLT_ ,omit extra plots	
-	PlotSet &y = CutFlow[c];
-	string cutflowName = "Flow_"+cutName_[c];
-        y.CreatPlot(FracSatVNstrips,new TH2D((cutflowName+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
-        y.CreatPlot(DedXSig,new TH1D((cutflowName+"DedXSig").c_str(),"",100,0,30));
-        y.CreatPlot(XYPar0,new TH1D((cutflowName+"XYPar0").c_str(),"",100,-1,1));
-        y.CreatPlot(XYPar2,new TH1D((cutflowName+"XYPar2").c_str(),"",100,-20000,20000));
-        y.CreatPlot(RZPar0,new TH1D((cutflowName+"RZPar0").c_str(),"",100,-20,20));
-        y.CreatPlot(RZPar1,new TH1D((cutflowName+"RZPar1").c_str(),"",100,-1,100));
-        y.CreatPlot(RZcurv,new TH1D((cutflowName+"RZcurv").c_str(),"",100,-0.01,0.01));
-        y.CreatPlot(E55,new TH1D((cutflowName+"E55").c_str(),"",100,-1,1200));
-        y.CreatPlot(F51,new TH1D((cutflowName+"F51").c_str(),"",100,0.2,1.1));
-        //y.CreatPlot(Spike,new TH1D((cutflowName+"Spike").c_str(),"",100,-5,5));
-        y.CreatPlot(HcalIso,new TH1D((cutflowName+"HcalIso").c_str(),"",100,-1,10));
-        y.CreatPlot(ABCD,new TH2D((cutflowName+"ABCD").c_str(),"",100,0,1.1,100,0,30));
-        cout<<"good cutflow"<<cutflowName<<endl;
+	   // nCut-1 is for ignoring HLT_ ,omit extra plots	
+	   PlotSet &y = CutFlow[c];
+	   string cutflowName = "Flow_"+cutName_[c];
+           y.CreatPlot(FracSatVNstrips,new TH2D((cutflowName+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
+           y.CreatPlot(DedXSig,new TH1D((cutflowName+"DedXSig").c_str(),"",100,0,30));
+           y.CreatPlot(XYPar0,new TH1D((cutflowName+"XYPar0").c_str(),"",100,-1,1));
+           y.CreatPlot(XYPar2,new TH1D((cutflowName+"XYPar2").c_str(),"",100,-20000,20000));
+           y.CreatPlot(RZPar0,new TH1D((cutflowName+"RZPar0").c_str(),"",100,-20,20));
+           y.CreatPlot(RZPar1,new TH1D((cutflowName+"RZPar1").c_str(),"",100,-1,100));
+           y.CreatPlot(RZcurv,new TH1D((cutflowName+"RZcurv").c_str(),"",100,-0.01,0.01));
+           y.CreatPlot(E55,new TH1D((cutflowName+"E55").c_str(),"",100,-1,1200));
+           y.CreatPlot(F51,new TH1D((cutflowName+"F51").c_str(),"",100,0.2,1.1));
+           //y.CreatPlot(Spike,new TH1D((cutflowName+"Spike").c_str(),"",100,-5,5));
+           y.CreatPlot(HcalIso,new TH1D((cutflowName+"HcalIso").c_str(),"",100,-1,10));
+           y.CreatPlot(ABCD,new TH2D((cutflowName+"ABCD").c_str(),"",100,0,1.1,100,0,30));
+
+       	   PlotSet &w = Profile[c];
+       	   w.CreatProfile(EcalBarrel ,new TProfile((cutflowName+"EcalBarrel").c_str(),"",30,0,1.1,0,30));
+       	   w.CreatProfile(EcalEndCup ,new TProfile((cutflowName+"EcalEndCup").c_str(),"",30,0,1.1,0,30));
+       	   w.CreatProfile(EcalAll ,new TProfile((cutflowName+"EcalAll").c_str(),"",30,0,1.1,0,30));
+           cout<<"good cutflow"<<cutflowName<<endl;
+
 	}
 
   }
@@ -129,6 +143,7 @@ public:
   }
   void SignalEff(const string trName, double TotalEvents);
 
+  void SaveAs_csv_crosstalk(const string fileName, double TotalEvents, string mass,string X_option, string UD_option);
   void SaveAs_csv(const string fileName, double TotalEvents, string mass,string trName){
         ofstream fout(fileName);
 
@@ -180,10 +195,12 @@ private:
   string trigName_;
   // No Cut plot
   vector<PlotSet> NoCutPlot;
+  vector<PlotSet> NoCutProfile;
   //N-1 cut plot box
   vector<PlotSet> n_1Plot;
   //cutflow plot box
   vector<PlotSet> CutFlow;
+  vector<PlotSet> Profile;
   static const unsigned nCut = 5U;
   string cutName_[nCut];
   
@@ -208,6 +225,9 @@ private:
   vector<MonoCandidate> CutFlowCand_Energy;
   vector<MonoCandidate> CutFlowCand_F51;
   vector<MonoCandidate> CutFlowCand_Dedx;
+  //for cross talk
+  vector<MonoCandidate> CutFlowCand_onlyDedx;
+  vector<MonoCandidate> CutFlowCand_QualDedx;
   //for data
   vector<MonoCandidate> Preselection;
 
@@ -229,6 +249,11 @@ private:
   int E_count=0;
   int f51_count=0;
   int dEdX_count=0; 
+  
+  //for cross talk
+  int dEdXOnly_count=0;
+  int QualdEdX_count=0;
+
   int SpikeLike=0;
   int EBarrel=0; 
   int Reco=0;
