@@ -15,17 +15,27 @@ enum PlotName{
   HcalIso,             // Hcal Iso
   Dist,
   ABCD,
-  Spike
+  Spike,
+  EcalBarrel,
+  EcalEndCup,
+  EcalAll
 };
 class PlotSet
 {
 public:
-  PlotSet(){plots_.resize(nPlot);}
+  PlotSet(){
+	plots_.resize(nPlot);
+	profile_.resize(nPlot);
+  }
   ~PlotSet(){}
   void CreatPlot(const PlotName pn, TH1* h){ 
 	plots_[pn] = h;
   }
+  void CreatProfile(const PlotName pn, TProfile* p){ 
+	profile_[pn] = p;
+  }
   TH1 * GetPlot(const PlotName pn){ return plots_[pn]; }
+  TProfile * GetProfile(const PlotName pn){ return profile_[pn]; }
   void WritePlot(){
 	for(int pn=0;pn<nPlot;pn++){
 	TH1 *h = plots_[pn];
@@ -34,8 +44,17 @@ public:
 	  }
 	}
   }
+  void WriteProfile(){
+	for(int pn=0;pn<nPlot;pn++){
+	TProfile *p = profile_[pn];
+	if(p){ 
+	  p->Write();
+	  }
+	}
+  }
 private:
   vector<TH1*> plots_;
+  vector<TProfile*> profile_;
 };
 #endif
 
