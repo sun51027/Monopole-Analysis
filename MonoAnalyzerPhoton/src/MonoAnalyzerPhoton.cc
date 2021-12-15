@@ -3,7 +3,7 @@
 //	Created by  Shih Lin
 //	
 //	Analysis code for Photon trigger(HLT_Photon200 mainly)
-//
+//	root -l -q 'MonoAnalyzerPhoton.cc("2018","1000")'
 //
 #include "iostream"
 #include "TAttMarker.h"
@@ -134,6 +134,7 @@ using namespace std;
   }
   void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matching){
 	PlotSet &z = NoCutPlot[n];
+	PlotSet &x = NoCutProfile[n];
 	vector<MonoCandidate> Matched;
 	if (matching == 1){
 		Matched = Matching(Cand);	
@@ -145,6 +146,9 @@ using namespace std;
 	   	  z.GetPlot(F51)->Fill(Matched[i].f51_);
            	  z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
            	  z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		  if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		  if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		  if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 		}
 	}
 	else{
@@ -156,12 +160,16 @@ using namespace std;
 		  z.GetPlot(F51)->Fill(Cand[i].f51_);
         	  z.GetPlot(HcalIso)->Fill(Cand[i].hIso_);
         	  z.GetPlot(ABCD)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+		  if(TMath::Abs(Cand[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+		  if(TMath::Abs(Cand[i].eta_) > 1.479 && TMath::Abs(Cand[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+		  if(TMath::Abs(Cand[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
 		}
 	}
 	Matched.clear();
   }
   void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool matching){
 	PlotSet &z = CutFlow[n];
+	PlotSet &x = Profile[n];
 	vector<MonoCandidate> Matched;
 	if (matching == 1){
 		Matched = Matching(CutFlowCand);	
@@ -173,6 +181,10 @@ using namespace std;
 	   	  z.GetPlot(F51)->Fill(Matched[i].f51_);
            	  z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
            	  z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		  if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		  if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		  if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		
 		}
 	}
 	else{
@@ -184,6 +196,9 @@ using namespace std;
 		  z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
         	  z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
         	  z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+		  if(TMath::Abs(CutFlowCand[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+		  if(TMath::Abs(CutFlowCand[i].eta_) > 1.479 && TMath::Abs(CutFlowCand[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+		  if(TMath::Abs(CutFlowCand[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 		}
 	}
 	Matched.clear();
@@ -241,9 +256,13 @@ using namespace std;
   void MonoCuts::WritePlots(TFile *oFile){
 	oFile->cd(trigName_.c_str());
 	NoCutPlot[0].WritePlot();
+	NoCutProfile[0].WriteProfile();
 	for(unsigned c=0; c<nCut; c++) n_1Plot[c].WritePlot();
 
-	for(unsigned c=0; c<nCut; c++) CutFlow[c].WritePlot();
+	for(unsigned c=0; c<nCut; c++){
+	    CutFlow[c].WritePlot();
+	    Profile[c].WriteProfile();
+	}
 	
   }
   void MonoCuts::SignalEff(const string trName, double TotalEvents)
