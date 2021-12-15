@@ -62,8 +62,10 @@ using namespace std;
 //    }
 //    }
 	//cut flow events calculating
-        sort(CutFlowCand_TRG.begin(),CutFlowCand_TRG.begin()+CutFlowCand_TRG.size());
-	
+        //the last option is matching
+        //  0 for NOT matching
+        //  1 for matching
+	sort(CutFlowCand_TRG.begin(),CutFlowCand_TRG.begin()+CutFlowCand_TRG.size());
 	if(CutFlowCand_TRG.size()>0) 
 	{
 		count++;
