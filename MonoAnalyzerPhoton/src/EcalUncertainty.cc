@@ -3,7 +3,8 @@
 //	Created by  Shih Lin
 //	
 //	Analysis code for Photon trigger(HLT_Photon200 mainly)
-//	root -l -q 'EcalUncertainty.cc("2018","1000")'
+//      matching_option : 0 NOT matching, 1 matching
+//	root -l -q 'EcalUncertainty.cc("2018","1000",0)'
 //
 //
 #include "iostream"
@@ -20,7 +21,7 @@
 #include "../interface/MonoCuts.h"
 using namespace std;
 
-  void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev)
+  void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option)
   {
 	Clear();
 
@@ -60,32 +61,32 @@ using namespace std;
 	if(CutFlowCand_TRG.size()>0) 
 	{
 		count++;
-		FillNoCutHistogram(0,CutFlowCand_TRG,0);
+		FillNoCutHistogram(0,CutFlowCand_TRG,matching_option);
 	}
         sort(CutFlowCand_Qual.begin(),CutFlowCand_Qual.begin()+CutFlowCand_Qual.size());
 	if(CutFlowCand_Qual.size()>0) 
 	{
 		Qual_count++;	
-		FillFlowHistogram(0,CutFlowCand_Qual,0);
+		FillFlowHistogram(0,CutFlowCand_Qual,matching_option);
 	}
 	
         sort(CutFlowCand_Energy.begin(),CutFlowCand_Energy.begin()+CutFlowCand_Energy.size());
 	if(CutFlowCand_Energy.size()>0)
 	{
 		E_count++;	
-		FillFlowHistogram(1,CutFlowCand_Energy,0);
+		FillFlowHistogram(1,CutFlowCand_Energy,matching_option);
 	}
         sort(CutFlowCand_F51.begin(),CutFlowCand_F51.begin()+CutFlowCand_F51.size());
 	if(CutFlowCand_F51.size()>0)
 	{
 		f51_count++;	
-		FillFlowHistogram(2,CutFlowCand_F51,0);
+		FillFlowHistogram(2,CutFlowCand_F51,matching_option);
 	}
 	sort(CutFlowCand_Dedx.begin(),CutFlowCand_Dedx.begin()+CutFlowCand_Dedx.size());
 	if(CutFlowCand_Dedx.size()>0)
 	{
 		dEdX_count++;	
-		FillFlowHistogram(3,CutFlowCand_Dedx,0);
+		FillFlowHistogram(3,CutFlowCand_Dedx,matching_option);
 	}
   }
   void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matching){
@@ -236,9 +237,16 @@ using namespace std;
   const double MonoCuts::f51Cut_ = 0.85;
   const double MonoCuts::photonCut_ = 200;
 
-void EcalUncertainty(string year, string mass)
+void EcalUncertainty(string year, string mass,bool matching_option)
 {
-	TFile *oFile = new TFile(("output/EcalUncertainty_Analysis_"+year+"_"+mass+"_NoMatched.root").c_str(),"recreate");
+        string matching;
+        if(matching_option == 0){
+                matching = "0";
+        }
+        else{
+                matching = "1";
+        }
+	TFile *oFile = new TFile(("output/EcalUncertainty_Analysis_"+year+"_"+mass+"_"+matching+".root").c_str(),"recreate");
 	TChain *tree = new TChain("monopoles");	
 	tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/ECal/"+year+"/"+mass+"/EcalSystematic_"+year+"_"+mass+"_*.root").c_str());
 
@@ -378,22 +386,22 @@ void EcalUncertainty(string year, string mass)
 			);
 			}
 		}
-			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev);		
-			if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev);
-			else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev);
+			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev,matching_option);		
+			if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev,matching_option);
+			else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev,matching_option);
 	}//for every event loop
 	TrgAnalysis.WritePlots(oFile);
 	if(year == "2016" || year == "2016APV"){
 		TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
-		TrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents,mass,"HLT_Photon175");
+		TrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+"_HLT_"+matching+".csv").c_str(),NEvents,mass,"HLT_Photon175");
 	}
 	else{
 		TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-		TrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+"_HLT.csv").c_str(),NEvents,mass,"HLT_Photon200");
+		TrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+"_HLT_"+matching+".csv").c_str(),NEvents,mass,"HLT_Photon200");
 	}
 	
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+".csv").c_str(),NEvents,mass,"NoTrg");
+	noTrgAnalysis.SaveAs_csv(("output/csv_file/EcalUncertainty_"+year+"_"+mass+"_"+matching+".csv").c_str(),NEvents,mass,"NoTrg");
 	oFile->Close();	
 }
