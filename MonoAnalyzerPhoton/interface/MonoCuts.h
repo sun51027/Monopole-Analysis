@@ -90,7 +90,7 @@ public:
   }
 
   ~MonoCuts(){}
-  void doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev);
+  void doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option);
   void doAnalysis_data(vector<MonoCandidate> &cand,unsigned nParticle,bool passHLT_Photon200,unsigned ev);
   void FillNoCutHistogram(int n,vector<MonoCandidate> Cand,bool matching);
   void FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand,bool matching);
