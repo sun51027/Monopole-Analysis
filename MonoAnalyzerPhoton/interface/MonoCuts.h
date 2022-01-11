@@ -98,24 +98,31 @@ public:
   vector<MonoCandidate>  Matching(vector<MonoCandidate> CutFlowCand);
   void Clear();
   void WritePlots(TFile *oFile);
-  void PrintInfo(){	
+  void PrintInfo(vector<MonoCandidate> Cand){	
         
-	cout<<"event tag"<<CutFlowCand_TRG[0].event_<<endl;
-	for(int i=0;i<CutFlowCand_TRG.size();i++){
-    	        //cout<<"          candidate           monoGen         antimonoGen"<<endl;
-    	   	//cout<<"eta      "<<setprecision(5)<<CutFlowCand_Dedx[i].eta_<<setw(20)<<CutFlowCand_Dedx[i].mono_eta_
-    	   	//		 <<setw(20)<<CutFlowCand_Dedx[i].amon_eta_<<endl;
-    	   	//cout<<"phi      "<<setprecision(5)<<CutFlowCand_Dedx[i].phi_<<setw(20)<<CutFlowCand_Dedx[i].mono_phi_
-    	   	//		 <<setw(20)<<CutFlowCand_Dedx[i].amon_phi_<<endl;
-    	   	//cout<<"m deltaR "<<m_deltaR<<endl;
-    	   	//cout<<"a deltaR "<<am_deltaR<<endl;
+	cout<<"event tag"<<Cand[0].event_<<endl;
+	for(int i=0;i<Cand.size();i++){
+		double m_deltaR =0;
+		double am_deltaR=0;
+                m_deltaR = sqrt(pow(Cand[i].eta_-Cand[0].mono_eta_,2)+
+                                pow(Cand[i].phi_-Cand[0].mono_phi_,2));
+                am_deltaR= sqrt(pow(Cand[i].eta_-Cand[0].amon_eta_,2)+
+                                pow(Cand[i].phi_-Cand[0].amon_phi_,2));
+
+    	        cout<<"          candidate           monoGen         antimonoGen"<<endl;
+    	   	cout<<"eta      "<<setprecision(5)<<Cand[i].eta_<<setw(20)<<Cand[i].mono_eta_
+    	   			 <<setw(20)<<Cand[i].amon_eta_<<endl;
+    	   	cout<<"phi      "<<setprecision(5)<<Cand[i].phi_<<setw(20)<<Cand[i].mono_phi_
+    	   			 <<setw(20)<<Cand[i].amon_phi_<<endl;
+    	   	cout<<"m deltaR "<<m_deltaR<<endl;
+    	   	cout<<"a deltaR "<<am_deltaR<<endl;
 		cout<<i<<endl;
-		cout<<"     eta "<<setprecision(5)<<CutFlowCand_TRG[i].eta_<<endl;
-		cout<<"     phi "<<setprecision(5)<<CutFlowCand_TRG[i].phi_<<endl;
-		cout<<"     E55 "<<setprecision(5)<<CutFlowCand_TRG[i].e55_<<endl;
-		cout<<" dEdxSig "<<setprecision(5)<<CutFlowCand_TRG[i].dEdXSig_<<endl;
-		cout<<"     f51 "<<setprecision(5)<<CutFlowCand_TRG[i].f51_<<endl;
-		cout<<"   Swiss "<<setprecision(5)<<CutFlowCand_TRG[i].Cross_<<endl;
+		cout<<"     eta "<<setprecision(5)<<Cand[i].eta_<<endl;
+		cout<<"     phi "<<setprecision(5)<<Cand[i].phi_<<endl;
+		cout<<"     E55 "<<setprecision(5)<<Cand[i].e55_<<endl;
+		cout<<" dEdxSig "<<setprecision(5)<<Cand[i].dEdXSig_<<endl;
+		cout<<"     f51 "<<setprecision(5)<<Cand[i].f51_<<endl;
+		cout<<"   Swiss "<<setprecision(5)<<Cand[i].Cross_<<endl;
 		cout<<"----------------------------"<<endl;
 	}
   }
@@ -225,6 +232,7 @@ private:
   vector<MonoCandidate> CutFlowCand_Energy;
   vector<MonoCandidate> CutFlowCand_F51;
   vector<MonoCandidate> CutFlowCand_Dedx;
+  vector<MonoCandidate> Matched;
   //for cross talk
   vector<MonoCandidate> CutFlowCand_onlyDedx;
   vector<MonoCandidate> CutFlowCand_QualDedx;

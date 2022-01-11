@@ -70,15 +70,15 @@ void MakeBlindPlot(int Unblind, string year){
     vector<double> key;
 
     cout<<"NEvents "<<Mono->GetEntries()<<endl;
-    for(int ev=0; ev< Mono->GetEntries(); ev++){
+    for(int ev=0; ev<Mono->GetEntries(); ev++){
 	//one event is one track/candidate(MC)
 	Mono->GetEntry(ev);
-	if (ev%1000000==0) cout<<(float)ev<<"/"<<Mono->GetEntries()<<endl;	
+	if (ev%10000000==0) cout<<(float)ev<<"/"<<Mono->GetEntries()<<endl;	
 		// you need to apply these preselection and trigger cut
 		// so that you can "estimate" the background !!( those cutted entries are not relate with our bkg!!)
 	      if(!(
-        	    passHLT_Photon200 == 1  
-	            && Dist < 0.5  
+    //    	    passHLT_Photon200 == 1  
+	              Dist < 0.5  
 	            && HIso < 10 
 	            && abs(XYPar0) < 0.6 
 	            && abs(XYPar1) < 10 
@@ -87,7 +87,7 @@ void MakeBlindPlot(int Unblind, string year){
 	            && abs(RZPar1) < 999 
 	            && abs(RZPar2) < 0.005 
 	            && cand_e55 > 200 
-//	            &&  sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) >2 
+	            &&  sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) >2 
 	             ) ) continue;
 
 //	if(Event == LastEvent ) sameEvent++;
@@ -221,7 +221,7 @@ void MakeBlindPlot(int Unblind, string year){
     fout<<"unc,"<<Expected->GetBinError(3,3)/Expected->GetBinContent(3,3)<<endl;
     fout.close();
 
-/*    Plot->Draw("col");
+    Plot->Draw("col");
     Actual->Draw("same text");
     Expected->Draw("same text e");
 
@@ -241,6 +241,6 @@ void MakeBlindPlot(int Unblind, string year){
 //    TPave *pave = new TPave(0.80,0.30,1.0,1.0,4,"br");
 //    pave->Draw();
 
-    c->SaveAs("ABCD_1.pdf"); 
-*/
+//    c->SaveAs("ABCD_1.pdf"); 
+
 }	

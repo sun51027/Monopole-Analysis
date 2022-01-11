@@ -69,32 +69,34 @@ using namespace std;
 	if(CutFlowCand_TRG.size()>0) 
 	{
 		count++;
-		FillNoCutHistogram(0,CutFlowCand_TRG,1);
+	//	FillNoCutHistogram(0,CutFlowCand_TRG,1);
 	}
         sort(CutFlowCand_Qual.begin(),CutFlowCand_Qual.begin()+CutFlowCand_Qual.size());
 	if(CutFlowCand_Qual.size()>0) 
 	{
 		Qual_count++;	
-		FillFlowHistogram(0,CutFlowCand_Qual,1);
+	//	FillFlowHistogram(0,CutFlowCand_Qual,1);
 	}
 	
         sort(CutFlowCand_Energy.begin(),CutFlowCand_Energy.begin()+CutFlowCand_Energy.size());
 	if(CutFlowCand_Energy.size()>0)
 	{
 		E_count++;	
-		FillFlowHistogram(1,CutFlowCand_Energy,1);
+	//	FillFlowHistogram(1,CutFlowCand_Energy,1);
 	}
         sort(CutFlowCand_F51.begin(),CutFlowCand_F51.begin()+CutFlowCand_F51.size());
 	if(CutFlowCand_F51.size()>0)
 	{
 		f51_count++;	
-		FillFlowHistogram(2,CutFlowCand_F51,1);
+	//	FillFlowHistogram(2,CutFlowCand_F51,1);
 	}
 	sort(CutFlowCand_Dedx.begin(),CutFlowCand_Dedx.begin()+CutFlowCand_Dedx.size());
 	if(CutFlowCand_Dedx.size()>0)
 	{
 		dEdX_count++;	
 		FillFlowHistogram(3,CutFlowCand_Dedx,1);
+		//PrintInfo(Matched);
+		//PrintInfo(CutFlowCand_Dedx);
 	}
 	///////////////////////////////////////////////////
 	/////////  N1 Cut Plots and  Count   //////////////
@@ -172,7 +174,7 @@ using namespace std;
   void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool matching){
 	PlotSet &z = CutFlow[n];
 	PlotSet &x = Profile[n];
-	vector<MonoCandidate> Matched;
+//	vector<MonoCandidate> Matched;
 	if (matching == 1){
 		Matched = Matching(CutFlowCand);	
 		for(int i=0; i < Matched.size() ;i++){
@@ -198,9 +200,9 @@ using namespace std;
 		  z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
         	  z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
         	  z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
-		  if(TMath::Abs(CutFlowCand[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
-		  if(TMath::Abs(CutFlowCand[i].eta_) > 1.479 && TMath::Abs(CutFlowCand[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
-		  if(TMath::Abs(CutFlowCand[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+//		  if(TMath::Abs(CutFlowCand[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+//		  if(TMath::Abs(CutFlowCand[i].eta_) > 1.479 && TMath::Abs(CutFlowCand[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+//		  if(TMath::Abs(CutFlowCand[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 		}
 	}
 	Matched.clear();
@@ -219,7 +221,6 @@ using namespace std;
   }
   vector<MonoCandidate> MonoCuts::Matching(vector<MonoCandidate> Cand){
 
-	   vector<MonoCandidate> Matched;
 
 	   for(int i=0; i<Cand.size();i++){
 		double m_deltaR=0;
@@ -234,10 +235,36 @@ using namespace std;
 			Reco++;
 			Flag=1;
 		}
+		
 	   }
 	   if(Flag==1)	      MatchedEvent++;
 	
 	Flag=0;
+	//------test--------//
+	cout<<"n mono "<<Matched.size()<<endl;
+	for(int i=0;i<Matched.size();i++){
+		double m_deltaR=0;
+		double am_deltaR=0;
+		m_deltaR = sqrt(pow(Matched[i].eta_-Matched[0].mono_eta_,2)+
+				pow(Matched[i].phi_-Matched[0].mono_phi_,2));
+		am_deltaR= sqrt(pow(Matched[i].eta_-Matched[0].amon_eta_,2)+
+                                pow(Matched[i].phi_-Matched[0].amon_phi_,2));
+                cout<<"          candidate           monoGen         antimonoGen"<<endl;
+                cout<<"eta      "<<setprecision(5)<<Matched[i].eta_<<setw(20)<<Matched[i].mono_eta_
+                                 <<setw(20)<<Matched[i].amon_eta_<<endl;
+                cout<<"phi      "<<setprecision(5)<<Matched[i].phi_<<setw(20)<<Matched[i].mono_phi_
+                                 <<setw(20)<<Matched[i].amon_phi_<<endl;
+                cout<<"m deltaR "<<m_deltaR<<endl;
+                cout<<"a deltaR "<<am_deltaR<<endl;
+                cout<<i<<endl;
+                cout<<"     eta "<<setprecision(5)<<Matched[i].eta_<<endl;
+                cout<<"     phi "<<setprecision(5)<<Matched[i].phi_<<endl;
+                cout<<"     E55 "<<setprecision(5)<<Matched[i].e55_<<endl;
+                cout<<" dEdxSig "<<setprecision(5)<<Matched[i].dEdXSig_<<endl;
+                cout<<"     f51 "<<setprecision(5)<<Matched[i].f51_<<endl;
+                cout<<"   Swiss "<<setprecision(5)<<Matched[i].Cross_<<endl;
+                cout<<"----------------------------"<<endl;
+	}
 	return Matched;
   }
   void MonoCuts::Clear(){
@@ -252,6 +279,7 @@ using namespace std;
 	N1CutCand_Energy.clear();
 	N1CutCand_F51.clear();
 	N1CutCand_Dedx.clear();
+	Matched.clear();
 	HighPtPhoton.clear();
   }
 
@@ -296,6 +324,7 @@ using namespace std;
         cout<<" dEdXSigCut "<<(double)dEdX_count/(double)NodEdXCut<<endl;
         cout<<endl;
 	cout<<"Total reconstructed event "<<MatchedEvent<<endl;
+	cout<<"Total reconstructed monopoles "<<Reco<<endl;
 	  
       cout<<endl;
   }
@@ -315,9 +344,9 @@ using namespace std;
 
 void MonoAnalyzerPhoton(string year, string mass)
 {
-	TFile *oFile = new TFile(("output/MonoPhotonAnalysis_"+year+"_"+mass+".root").c_str(),"recreate");	
-	TFile *fin = new TFile(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/"+mass+"/MonoNtuple"+year+"_MC_"+mass+".root").c_str());
-        TTree *tree = (TTree*)fin->Get("monopoles");
+	TFile *oFile = new TFile(("output/MonoPhotonAnalysis_"+year+"_"+mass+".root").c_str(),"recreate");
+	TChain *tree = new TChain("monopoles");
+	tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/"+mass+"/*.root").c_str());
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
 	Bool_t passHLT_DoublePhoton70;

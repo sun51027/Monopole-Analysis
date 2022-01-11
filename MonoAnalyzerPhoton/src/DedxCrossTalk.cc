@@ -289,16 +289,16 @@ using namespace std;
 
 void DedxCrossTalk(string year, string mass, string X_option, string UD_option)
 {
-	//TFile *oFile = new TFile(("output/DedxCrossTalk_Analysis_"+year+"_"+mass+".root").c_str(),"recreate");
-	//string dir = "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DedxCrossTalk/";
-	//TChain *tree = new TChain("monopoles");
-	//tree->Add((dir+year+"/"+X_option+"/"+UD_option+"/"+mass+"/*").c_str());
+	TFile *oFile = new TFile(("output/DedxCrossTalk_Analysis_"+year+"_"+mass+".root").c_str(),"recreate");
+	string dir = "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DedxCrossTalk/";
+	TChain *tree = new TChain("monopoles");
+	tree->Add((dir+year+"/"+X_option+"/"+UD_option+"/"+mass+"/*").c_str());
 	
 	//to compare original	
-	TFile *oFile = new TFile(("output/DedxCrossTalk_Analysis_"+year+"_"+mass+"_toCompare.root").c_str(),"recreate");
-	string dir = "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/";
-	TChain *tree = new TChain("monopoles");
-	tree->Add((dir+mass+"/*").c_str());
+//	TFile *oFile = new TFile(("output/DedxCrossTalk_Analysis_"+year+"_"+mass+"_toCompare.root").c_str(),"recreate");
+//	string dir = "/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/";
+//	TChain *tree = new TChain("monopoles");
+//	tree->Add((dir+mass+"/*").c_str());
 
         Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
