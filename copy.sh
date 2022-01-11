@@ -10,11 +10,14 @@ set -e  #if there is error , stop running
 #scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/Ecal/2017/ Systematic/Ecal/
 #scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/Ecal/2016/ Systematic/Ecal/
 #scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/Ecal/2016APV/ Systematic/Ecal/
-#scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2016APV Systematic/DedxCrossTalk/
+scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2016APV/down/2000 Systematic/DedxCrossTalk/2016APV/X0/down/
+scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2016APV/down/3000 Systematic/DedxCrossTalk/2016APV/X0/down/
+scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2016APV/down/4000 Systematic/DedxCrossTalk/2016APV/X0/down/
+scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2016APV/up/4000 Systematic/DedxCrossTalk/2016APV/X0/up/
 #scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2016 Systematic/DedxCrossTalk/
 #scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2017 Systematic/DedxCrossTalk/
-scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2018/X0/down/4000/ Systematic/DedxCrossTalk/2018/X0/down/
-#scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DeltaRayOff/2016/2000/ Systematic/DeltaRayOff/2016/2000/
+#scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DedxCrossTalk/2018/X0/down/4000/ Systematic/DedxCrossTalk/2018/X0/down/
+#scp -rp lshih@lxplus.cern.ch:/eos/user/l/lshih/Systematic/DeltaRayOff/2018/1000/* Systematic/DeltaRayOff/2018/1000
 #scp -rp lshih@lxplus.cern.ch:/afs/cern.ch/user/l/lshih/CMSSW_10_6_23/src/ntuple_mc_2018_cfg.py .
 #scp -rp lshih@lxplus.cern.ch:/afs/cern.ch/user/l/lshih/CMSSW_10_6_23/src/tmpSUB.SUB .
 #scp -rp lshih@lxplus.cern.ch:/afs/cern.ch/user/l/lshih/CMSSW_10_6_23/src/submit.sh .
