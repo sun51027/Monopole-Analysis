@@ -646,7 +646,7 @@ public:
   void WritePlots(TFile *oFile ){
 	oFile->cd(trigName_.c_str());
 	
-	Plot[0].WritePlot();
+//	Plot[0].WritePlot();
 	Plot[0].WriteProfile();
 	
   }
@@ -713,7 +713,7 @@ public:
   {
         //signal efficiency = no. of events after all selection cuts/all events
 
-//	        cout<<"Trigger Efficiency "<<trName<<" "<<(double)count_TRG/(double)TotalEvents<<endl;	
+        cout<<"Trigger Efficiency "<<trName<<" "<<(double)count_TRG/(double)TotalEvents<<endl;	
 
 	cout<<endl;
 	cout<<trName<<" ============================="<<endl;
@@ -848,7 +848,7 @@ private:
   const double MonoCuts::photonCut_ = 0;
   const double MonoCuts::electronCut_ = 0;
 
-void MonoAnalyzerPFMET_PF_0805()
+void MonoAnalyzerPFMET()
 {
 	TFile *oFile = new TFile("MonoPFMETAnlysis_2018_1000.root","recreate");
 	
@@ -1009,15 +1009,15 @@ void MonoAnalyzerPFMET_PF_0805()
 	
 	
 	MonoCuts noTrgAnalysis("NOTRG",oFile);
-//	MonoCuts TrgAnalysis_Photon                                 ("HLT_Photon200",oFile);
-//	MonoCuts TrgAnalysis_PFMET300		                    ("HLT_PFMET300",oFile);
-//	MonoCuts TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned          ("HLT_PFMET170_HBHE_BeamHaloCleaned",oFile);
-//	MonoCuts TrgAnalysis_PFMET140_PFMHT140_IDTight              ("HLT_PFMET140_PFMHT140_IDTight",oFile);
-//	MonoCuts TrgAnalysis_PFMET250_HBHECleaned                   ("HLT_PFMET250_HBHECleaned",oFile);
-//	MonoCuts TrgAnalysis_PFMET300_HBHECleaned                   ("HLT_PFMET300_HBHECleaned",oFile);
-//	MonoCuts TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned          ("HLT_PFMET200_HBHE_BeamHaloCleaned",oFile);
-//	MonoCuts TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned   ("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned",oFile);
-//	MonoCuts TrgAnalysis_CaloMET300_HBHECleaned                 ("HLT_CaloMET300_HBHECleaned",oFile);
+	MonoCuts TrgAnalysis_Photon                                 ("HLT_Photon200",oFile);
+	MonoCuts TrgAnalysis_PFMET300		                    ("HLT_PFMET300",oFile);
+	MonoCuts TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned          ("HLT_PFMET170_HBHE_BeamHaloCleaned",oFile);
+	MonoCuts TrgAnalysis_PFMET140_PFMHT140_IDTight              ("HLT_PFMET140_PFMHT140_IDTight",oFile);
+	MonoCuts TrgAnalysis_PFMET250_HBHECleaned                   ("HLT_PFMET250_HBHECleaned",oFile);
+	MonoCuts TrgAnalysis_PFMET300_HBHECleaned                   ("HLT_PFMET300_HBHECleaned",oFile);
+	MonoCuts TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned          ("HLT_PFMET200_HBHE_BeamHaloCleaned",oFile);
+	MonoCuts TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned   ("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned",oFile);
+	MonoCuts TrgAnalysis_CaloMET300_HBHECleaned                 ("HLT_CaloMET300_HBHECleaned",oFile);
 
 	vector<MonoCandidate> cand(10);	
 	vector<Photon> photon(0);
@@ -1080,7 +1080,6 @@ void MonoAnalyzerPFMET_PF_0805()
 			
      		 );
 		}
-//		cout<<"enter photon loop"<<endl;
 		if(nPhoton!=0){
 		for(unsigned j=0;j<nPhoton;j++){
 			photon[j] = Photon(
@@ -1113,37 +1112,37 @@ void MonoAnalyzerPFMET_PF_0805()
                 }
 			noTrgAnalysis.doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,	nElectron,nParticleflow,true,ev,MET_pt,MET_phi);
 				
-//         TrgAnalysis_PFMET300                            .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET300,ev,MET_pt,MET_phi);
-//         TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned       .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET170_HBHE_BeamHaloCleaned,ev,MET_pt,MET_phi);
-//         TrgAnalysis_PFMET140_PFMHT140_IDTight           .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET140_PFMHT140_IDTight,ev,MET_pt,MET_phi);
-//         TrgAnalysis_PFMET250_HBHECleaned                .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET250_HBHECleaned,ev,MET_pt,MET_phi);
-//         TrgAnalysis_PFMET300_HBHECleaned                .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET300_HBHECleaned,ev,MET_pt,MET_phi);
-//         TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned       .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET200_HBHE_BeamHaloCleaned,ev,MET_pt,MET_phi);
-//         TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned.doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMETTypeOne200_HBHE_BeamHaloCleaned,ev,MET_pt,MET_phi);
-//         TrgAnalysis_CaloMET300_HBHECleaned              .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_CaloMET300_HBHECleaned,ev,MET_pt,MET_phi);
-//         TrgAnalysis_Photon		 		 .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_Photon200,ev,MET_pt,MET_phi);
-	}//for every event loop
-	
-//	  TrgAnalysis_Photon         			  .SignalEff("HLT_Photon200",NEvents); 
-//        TrgAnalysis_PFMET300		                  .SignalEff("HLT_PFMET300",NEvents);
-//        TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned         .SignalEff("HLT_PFMET170_HBHE_BeamHaloCleaned",NEvents);
-//        TrgAnalysis_PFMET140_PFMHT140_IDTight             .SignalEff("HLT_PFMET140_PFMHT140_IDTight",NEvents);
-//        TrgAnalysis_PFMET250_HBHECleaned                  .SignalEff("HLT_PFMET250_HBHECleaned",NEvents);
-//        TrgAnalysis_PFMET300_HBHECleaned                  .SignalEff("HLT_PFMET300_HBHECleaned",NEvents);
-//        TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned         .SignalEff("HLT_PFMET200_HBHE_BeamHaloCleaned",NEvents);
-//        TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned  .SignalEff("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned",NEvents);
-//        TrgAnalysis_CaloMET300_HBHECleaned                .SignalEff("HLT_CaloMET300_HBHECleaned",NEvents);                  
+         TrgAnalysis_PFMET300                            .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET300,ev,MET_pt,MET_phi);
+         TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned       .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET170_HBHE_BeamHaloCleaned,ev,MET_pt,MET_phi);
+         TrgAnalysis_PFMET140_PFMHT140_IDTight           .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET140_PFMHT140_IDTight,ev,MET_pt,MET_phi);
+         TrgAnalysis_PFMET250_HBHECleaned                .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET250_HBHECleaned,ev,MET_pt,MET_phi);
+         TrgAnalysis_PFMET300_HBHECleaned                .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET300_HBHECleaned,ev,MET_pt,MET_phi);
+         TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned       .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMET200_HBHE_BeamHaloCleaned,ev,MET_pt,MET_phi);
+         TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned.doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_PFMETTypeOne200_HBHE_BeamHaloCleaned,ev,MET_pt,MET_phi);
+         TrgAnalysis_CaloMET300_HBHECleaned              .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_CaloMET300_HBHECleaned,ev,MET_pt,MET_phi);
+         TrgAnalysis_Photon		 		 .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_Photon200,ev,MET_pt,MET_phi);
+      }//for every event loop
+      
+	  TrgAnalysis_Photon         			  .SignalEff("HLT_Photon200",NEvents); 
+        TrgAnalysis_PFMET300		                  .SignalEff("HLT_PFMET300",NEvents);
+        TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned         .SignalEff("HLT_PFMET170_HBHE_BeamHaloCleaned",NEvents);
+        TrgAnalysis_PFMET140_PFMHT140_IDTight             .SignalEff("HLT_PFMET140_PFMHT140_IDTight",NEvents);
+        TrgAnalysis_PFMET250_HBHECleaned                  .SignalEff("HLT_PFMET250_HBHECleaned",NEvents);
+        TrgAnalysis_PFMET300_HBHECleaned                  .SignalEff("HLT_PFMET300_HBHECleaned",NEvents);
+        TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned         .SignalEff("HLT_PFMET200_HBHE_BeamHaloCleaned",NEvents);
+        TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned  .SignalEff("HLT_PFMETTypeOne200_HBHE_BeamHaloCleaned",NEvents);
+        TrgAnalysis_CaloMET300_HBHECleaned                .SignalEff("HLT_CaloMET300_HBHECleaned",NEvents);                  
 
 
-//         TrgAnalysis_Photon                              .WritePlots(oFile);
-//         TrgAnalysis_PFMET300		                 .WritePlots(oFile);       
-//         TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned       .WritePlots(oFile);     
-//         TrgAnalysis_PFMET140_PFMHT140_IDTight           .WritePlots(oFile);
-//         TrgAnalysis_PFMET250_HBHECleaned                .WritePlots(oFile);   
-//         TrgAnalysis_PFMET300_HBHECleaned                .WritePlots(oFile);
-//         TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned       .WritePlots(oFile);   
-//         TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned.WritePlots(oFile);
-//         TrgAnalysis_CaloMET300_HBHECleaned              .WritePlots(oFile);   
+         TrgAnalysis_Photon                              .WritePlots(oFile);
+         TrgAnalysis_PFMET300		                 .WritePlots(oFile);       
+         TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned       .WritePlots(oFile);     
+         TrgAnalysis_PFMET140_PFMHT140_IDTight           .WritePlots(oFile);
+         TrgAnalysis_PFMET250_HBHECleaned                .WritePlots(oFile);   
+         TrgAnalysis_PFMET300_HBHECleaned                .WritePlots(oFile);
+         TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned       .WritePlots(oFile);   
+         TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned.WritePlots(oFile);
+         TrgAnalysis_CaloMET300_HBHECleaned              .WritePlots(oFile);   
 	                                                     
 
 	noTrgAnalysis.WritePlots(oFile);
