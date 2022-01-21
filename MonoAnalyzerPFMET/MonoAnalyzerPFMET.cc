@@ -712,9 +712,10 @@ public:
   void SignalEff(const string trName,unsigned TotalEvents)
   {
         //signal efficiency = no. of events after all selection cuts/all events
-
         cout<<"Trigger Efficiency "<<trName<<" "<<(double)count_TRG/(double)TotalEvents<<endl;	
-
+  }
+  void Statistics(const string trName,unsigned TotalEvents)
+  {
 	cout<<endl;
 	cout<<trName<<" ============================="<<endl;
 	cout<<"Statistical Result for Mass 1000GeV "<<endl;
@@ -1122,8 +1123,11 @@ void MonoAnalyzerPFMET()
          TrgAnalysis_CaloMET300_HBHECleaned              .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_CaloMET300_HBHECleaned,ev,MET_pt,MET_phi);
          TrgAnalysis_Photon		 		 .doAnalysis(cand,photon,electron,particleflow,nCandidates,nPhoton,nElectron,nParticleflow,passHLT_Photon200,ev,MET_pt,MET_phi);
       }//for every event loop
-      
-	  TrgAnalysis_Photon         			  .SignalEff("HLT_Photon200",NEvents); 
+
+	noTrgAnalysis.WritePlots(oFile);
+	noTrgAnalysis.Statistics("NOTRG",NEvents);
+
+	TrgAnalysis_Photon         			  .SignalEff("HLT_Photon200",NEvents); 
         TrgAnalysis_PFMET300		                  .SignalEff("HLT_PFMET300",NEvents);
         TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned         .SignalEff("HLT_PFMET170_HBHE_BeamHaloCleaned",NEvents);
         TrgAnalysis_PFMET140_PFMHT140_IDTight             .SignalEff("HLT_PFMET140_PFMHT140_IDTight",NEvents);
@@ -1134,19 +1138,17 @@ void MonoAnalyzerPFMET()
         TrgAnalysis_CaloMET300_HBHECleaned                .SignalEff("HLT_CaloMET300_HBHECleaned",NEvents);                  
 
 
-         TrgAnalysis_Photon                              .WritePlots(oFile);
-         TrgAnalysis_PFMET300		                 .WritePlots(oFile);       
-         TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned       .WritePlots(oFile);     
-         TrgAnalysis_PFMET140_PFMHT140_IDTight           .WritePlots(oFile);
-         TrgAnalysis_PFMET250_HBHECleaned                .WritePlots(oFile);   
-         TrgAnalysis_PFMET300_HBHECleaned                .WritePlots(oFile);
-         TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned       .WritePlots(oFile);   
-         TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned.WritePlots(oFile);
-         TrgAnalysis_CaloMET300_HBHECleaned              .WritePlots(oFile);   
+        TrgAnalysis_Photon                              .WritePlots(oFile);
+        TrgAnalysis_PFMET300		                 .WritePlots(oFile);       
+        TrgAnalysis_PFMET170_HBHE_BeamHaloCleaned       .WritePlots(oFile);     
+        TrgAnalysis_PFMET140_PFMHT140_IDTight           .WritePlots(oFile);
+        TrgAnalysis_PFMET250_HBHECleaned                .WritePlots(oFile);   
+        TrgAnalysis_PFMET300_HBHECleaned                .WritePlots(oFile);
+        TrgAnalysis_PFMET200_HBHE_BeamHaloCleaned       .WritePlots(oFile);   
+        TrgAnalysis_PFMETTypeOne200_HBHE_BeamHaloCleaned.WritePlots(oFile);
+        TrgAnalysis_CaloMET300_HBHECleaned              .WritePlots(oFile);   
 	                                                     
 
-	noTrgAnalysis.WritePlots(oFile);
-	noTrgAnalysis.SignalEff("NOTRG",NEvents);
+
 	oFile->Close();	
-	cout<<"end of the code"<<endl;
 }
