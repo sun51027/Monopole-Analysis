@@ -23,7 +23,7 @@
 #include <string>
 
 float Run, Event, SatSubHits, SubHits, Dist, HIso, XYPar0, XYPar1,XYPar2, RZPar0, RZPar1, RZPar2,Eta, seedFrac, cand_e55, passHLT_Photon200;
-void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> nChiSquare_5, vector<double> eChiSquare_5);
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare);
 TChain *SetMonoAddress(TChain *Mono,string year){
 
     Mono->Add(("../../Data/data_"+year+"/*").c_str());
@@ -102,7 +102,7 @@ void MakeBlindPlot_scan(int Unblind, string year){
     double y_[100] = {0};
     int i = 0;
     vector<double> eChiSquare;
-    vector<double> nChiSquare;
+    vector<double> ChiSquare;
 
     double x_tight = 85;
     double y_tight = 18;
@@ -242,16 +242,15 @@ void MakeBlindPlot_scan(int Unblind, string year){
     l1->Draw(); l2->Draw(); l3->Draw(); l4->Draw();
 
     //newPlot->Write();
+//	cout<<"Expected->GetBinError(2,2) "<<Actual->GetBinError(2,2)<<endl;
+//    eChiSquare.push_back(sqrt(pow(Actual->GetBinError(2,2),2)+pow(Expected->GetBinError(2,2),2)
+//				+pow(Actual->GetBinError(2,3),2)+pow(Expected->GetBinError(2,3),2)
+//				+pow(Actual->GetBinError(3,2),2)+pow(Expected->GetBinError(3,2),2)));
 
-    eChiSquare.push_back(sqrt(pow(Actual->GetBinError(2,2),2)+pow(Expected->GetBinError(2,2),2)
-				+pow(Actual->GetBinError(2,3),2)+pow(Expected->GetBinError(2,3),2)
-				+pow(Actual->GetBinError(3,2),2)+pow(Expected->GetBinError(3,2),2)
-				+pow(Actual->GetBinError(3,3),2)+pow(Expected->GetBinError(3,3),2)));
-
-    nChiSquare.push_back(sqrt(pow(Actual->GetBinContent(2,2)-Expected->GetBinContent(2,2),2)
-				+pow(Actual->GetBinContent(2,3)-Expected->GetBinContent(2,3),2)
-				+pow(Actual->GetBinContent(3,2)-Expected->GetBinContent(3,2),2)
-				+pow(Actual->GetBinContent(3,3)-Expected->GetBinContent(3,3),2)));
+    ChiSquare.push_back(pow(Actual->GetBinContent(2,2)-Expected->GetBinContent(2,2),2)/(pow(Actual->GetBinError(2,2),2)+pow(Expected->GetBinError(2,2),2))
+				+pow(Actual->GetBinContent(2,3)-Expected->GetBinContent(2,3),2)/(pow(Actual->GetBinError(2,3),2)+pow(Expected->GetBinError(2,3),2))
+				+pow(Actual->GetBinContent(3,2)-Expected->GetBinContent(3,2),2)/(pow(Actual->GetBinError(3,2),2)+pow(Expected->GetBinError(3,2),2)));
+	// Q^2 =Sum((Exp-Actual)^2 / (errExp^2+errAct^2))
 
     x_[i] = x_loose;
     y_[i] = y_loose;
@@ -274,14 +273,14 @@ void MakeBlindPlot_scan(int Unblind, string year){
 	int nloop = 0;
 	nloop = i;	
 	cout<<"Loop "<<nloop<<endl;
-	ChiSquare_scan(x_,y_,nloop,nChiSquare,eChiSquare);
+	ChiSquare_scan(x_,y_,nloop,ChiSquare);
 }
-void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> nChiSquare, vector<double> eChiSquare){
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare){
 
         ofstream Scan_result("output/csv_file/ABCD_scan.csv"); 
-	Scan_result<<"f51,dEdxSig,diff,error"<<endl;
+	Scan_result<<"f51,dEdxSig,Chi-square"<<endl;
 	for(int i =0;i<nloop;i++){
-	Scan_result<<x_[i]<<","<<y_[i]<<","<<nChiSquare[i]<<","<<eChiSquare[i]<<endl;
+	Scan_result<<x_[i]<<","<<y_[i]<<","<<ChiSquare[i]<<endl;
 	}
 
 }
