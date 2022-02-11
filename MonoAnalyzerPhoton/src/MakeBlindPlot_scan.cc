@@ -23,16 +23,87 @@
 #include <string>
 
 float Run, Event, SatSubHits, SubHits, Dist, HIso, XYPar0, XYPar1,XYPar2, RZPar0, RZPar1, RZPar2,Eta, seedFrac, cand_e55, passHLT_Photon200;
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> nChiSquare_5, vector<double> eChiSquare_5);
+TChain *SetMonoAddress(TChain *Mono,string year){
 
-TChain *SetMonoAddress(TChain *Mono,string year);
-void doAnalysis(TChain *Mono,TH2F *Plot);
+    Mono->Add(("../../Data/data_"+year+"/*").c_str());
 
+    Mono->SetBranchAddress("run", &Run);
+    Mono->SetBranchAddress("event", &Event);// every Event
+    Mono->SetBranchAddress("Dist", &Dist);
+    Mono->SetBranchAddress("HIso", &HIso);
+    Mono->SetBranchAddress("XYPar0", &XYPar0);
+    Mono->SetBranchAddress("XYPar1", &XYPar1);
+    Mono->SetBranchAddress("XYPar2", &XYPar2);
+    Mono->SetBranchAddress("RZPar0", &RZPar0);
+    Mono->SetBranchAddress("RZPar1", &RZPar1);
+    Mono->SetBranchAddress("RZPar2", &RZPar2);
+    Mono->SetBranchAddress("Eta", &Eta);
+    Mono->SetBranchAddress("SatSubHits", &SatSubHits);
+    Mono->SetBranchAddress("SubHits", &SubHits);
+    Mono->SetBranchAddress("seedFrac", &seedFrac);
+    Mono->SetBranchAddress("cand_e55", &cand_e55);
+    Mono->SetBranchAddress("passHLT_Photon200", &passHLT_Photon200);
+    return Mono;
+}
+
+void doAnalysis(TChain *Mono,TH2F *Plot){
+
+    int LastEvent = -1;
+    vector<pair<float,float>> Point;
+    for(int ev=0; ev<Mono->GetEntries(); ev++){
+	Mono->GetEntry(ev);
+	if (ev%10000000==0) cout<<(float)ev<<"/"<<Mono->GetEntries()<<endl;	
+	      if(!(
+        	    passHLT_Photon200 == 1  
+	            &&  Dist < 0.5  
+	            && HIso < 10 
+	            && abs(XYPar0) < 0.6 
+	            && abs(XYPar1) < 10 
+	            && abs(XYPar2) > 1000 
+	            && abs(RZPar0) < 10 
+	            && abs(RZPar1) < 999 
+	            && abs(RZPar2) < 0.005 
+	            && cand_e55 > 200 
+//	            &&  sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) >2 
+	             ) ) continue;
+
+	if((int)Event!=LastEvent && Point.size()>0){
+	//1. Only see different events to do the ABCD method
+	   sort(Point.begin(),Point.end());
+
+	   for(int i=Point.size()-1;i>=0;i--){
+		Plot->Fill(Point[i].second,Point[i].first);
+		//2nd->f51 for x-axis, 1st->dedx for y-axis)
+	  	if(Point[i].second>0.0 && Point[i].first > 0.0 ) break;
+		// only fill one ev at a point, not superposition	
+	    }	
+		Point.clear();
+		LastEvent = Event;
+		
+	}
+
+	float Significance = sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) ;
+        if (Significance > 29) Significance = 29;
+
+        Point.push_back(pair<float,float>(Significance, seedFrac));
+   }
+
+}
 void MakeBlindPlot_scan(int Unblind, string year){
 
+//    TFile *oFile = new TFile("ABCD_Scan.root","recreate");
     TCanvas *c = new TCanvas("c","",800,600);
     TChain *Mono  = new TChain("monopoles");
     SetMonoAddress(Mono,year);
-//    TFile *oFile = new TFile("ABCD_Scan.root","recreate");
+	
+	
+    double x_[100] = {0};
+    double y_[100] = {0};
+    int i = 0;
+    vector<double> eChiSquare;
+    vector<double> nChiSquare;
+
     double x_tight = 85;
     double y_tight = 18;
 
@@ -171,17 +242,20 @@ void MakeBlindPlot_scan(int Unblind, string year){
     l1->Draw(); l2->Draw(); l3->Draw(); l4->Draw();
 
     //newPlot->Write();
-//    vector<double> nActual_5 ;
-//    vector<double> nActual_8 ;
-//    vector<double> nActual_6 ;
-//    vector<double> nActual_9 ;
-//
-//    nActual_5.push_backActual->GetBinContent(2,2);
-//    nActual_8.push_backActual->GetBinContent(2,3);
-//    nActual_6.push_backActual->GetBinContent(3,2);
-//    nActual_9.push_backActual->GetBinContent(3,3);
 
-    double 
+    eChiSquare.push_back(sqrt(pow(Actual->GetBinError(2,2),2)+pow(Expected->GetBinError(2,2),2)
+				+pow(Actual->GetBinError(2,3),2)+pow(Expected->GetBinError(2,3),2)
+				+pow(Actual->GetBinError(3,2),2)+pow(Expected->GetBinError(3,2),2)
+				+pow(Actual->GetBinError(3,3),2)+pow(Expected->GetBinError(3,3),2)));
+
+    nChiSquare.push_back(sqrt(pow(Actual->GetBinContent(2,2)-Expected->GetBinContent(2,2),2)
+				+pow(Actual->GetBinContent(2,3)-Expected->GetBinContent(2,3),2)
+				+pow(Actual->GetBinContent(3,2)-Expected->GetBinContent(3,2),2)
+				+pow(Actual->GetBinContent(3,3)-Expected->GetBinContent(3,3),2)));
+
+    x_[i] = x_loose;
+    y_[i] = y_loose;
+    i++;
 
     ofstream fout("output/csv_file/ABCD_"+year+"_"+LooseX+"_"+LooseY+".csv"); 
     fout<<year<<",f51,dEdXSig"<<endl;
@@ -194,76 +268,21 @@ void MakeBlindPlot_scan(int Unblind, string year){
     fout.close();
     
     y_loose = y_loose+2;
-  }
+    }
     x_loose = x_loose+5;
- }
-
-//    c->SaveAs("ABCD_1.pdf"); 
+  } 
+	int nloop = 0;
+	nloop = i;	
+	cout<<"Loop "<<nloop<<endl;
+	ChiSquare_scan(x_,y_,nloop,nChiSquare,eChiSquare);
 }
-	
-TChain *SetMonoAddress(TChain *Mono,string year){
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> nChiSquare, vector<double> eChiSquare){
 
-    Mono->Add(("../../Data/data_"+year+"/*").c_str());
-
-    Mono->SetBranchAddress("run", &Run);
-    Mono->SetBranchAddress("event", &Event);// every Event
-    Mono->SetBranchAddress("Dist", &Dist);
-    Mono->SetBranchAddress("HIso", &HIso);
-    Mono->SetBranchAddress("XYPar0", &XYPar0);
-    Mono->SetBranchAddress("XYPar1", &XYPar1);
-    Mono->SetBranchAddress("XYPar2", &XYPar2);
-    Mono->SetBranchAddress("RZPar0", &RZPar0);
-    Mono->SetBranchAddress("RZPar1", &RZPar1);
-    Mono->SetBranchAddress("RZPar2", &RZPar2);
-    Mono->SetBranchAddress("Eta", &Eta);
-    Mono->SetBranchAddress("SatSubHits", &SatSubHits);
-    Mono->SetBranchAddress("SubHits", &SubHits);
-    Mono->SetBranchAddress("seedFrac", &seedFrac);
-    Mono->SetBranchAddress("cand_e55", &cand_e55);
-    Mono->SetBranchAddress("passHLT_Photon200", &passHLT_Photon200);
-    return Mono;
-}
-
-void doAnalysis(TChain *Mono,TH2F *Plot){
-
-    int LastEvent = -1;
-    vector<pair<float,float>> Point;
-    for(int ev=0; ev<Mono->GetEntries(); ev++){
-	Mono->GetEntry(ev);
-	if (ev%10000000==0) cout<<(float)ev<<"/"<<Mono->GetEntries()<<endl;	
-	      if(!(
-        	    passHLT_Photon200 == 1  
-	            &&  Dist < 0.5  
-	            && HIso < 10 
-	            && abs(XYPar0) < 0.6 
-	            && abs(XYPar1) < 10 
-	            && abs(XYPar2) > 1000 
-	            && abs(RZPar0) < 10 
-	            && abs(RZPar1) < 999 
-	            && abs(RZPar2) < 0.005 
-	            && cand_e55 > 200 
-//	            &&  sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) >2 
-	             ) ) continue;
-
-	if((int)Event!=LastEvent && Point.size()>0){
-	//1. Only see different events to do the ABCD method
-	   sort(Point.begin(),Point.end());
-
-	   for(int i=Point.size()-1;i>=0;i--){
-		Plot->Fill(Point[i].second,Point[i].first);
-		//2nd->f51 for x-axis, 1st->dedx for y-axis)
-	  	if(Point[i].second>0.0 && Point[i].first > 0.0 ) break;
-		// only fill one ev at a point, not superposition	
-	    }	
-		Point.clear();
-		LastEvent = Event;
-		
+        ofstream Scan_result("output/csv_file/ABCD_scan.csv"); 
+	Scan_result<<"f51,dEdxSig,diff,error"<<endl;
+	for(int i =0;i<nloop;i++){
+	Scan_result<<x_[i]<<","<<y_[i]<<","<<nChiSquare[i]<<","<<eChiSquare[i]<<endl;
 	}
 
-	float Significance = sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) ;
-        if (Significance > 29) Significance = 29;
-
-        Point.push_back(pair<float,float>(Significance, seedFrac));
-   }
-
 }
+	
