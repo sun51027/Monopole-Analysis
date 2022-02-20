@@ -113,7 +113,7 @@ void MakeBlindPlot_scan(int Unblind, string year){
     doAnalysis(Mono,Plot);
 
  for(int x_loose = 40 ; x_loose < x_tight; ){	//f51 40, 45, 50, 55, 60, 65, 70, 75, 80
-    for(int y_loose = 8; y_loose < y_tight;){  //dedx 8,10,12,14,16 (4, 5, 6, 7,8)
+    for(int y_loose = 8; y_loose <= y_tight;){  //dedx 8,10,12,14,16 (4, 5, 6, 7,8)
 	
     TH2F *newPlot = (TH2F*)Plot->Clone("newPlot");
     string LooseX = to_string(x_loose);
@@ -266,7 +266,7 @@ void MakeBlindPlot_scan(int Unblind, string year){
     fout<<"9,"<<Actual->GetBinContent(3,3)<<","<<Expected->GetBinContent(3,3)<<","<<Expected->GetBinError(3,3)<<","<<Expected->GetBinError(3,3)/Expected->GetBinContent(3,3)<<endl;
     fout.close();
     
-    y_loose = y_loose+2;
+    y_loose = y_loose+1;
     }
     x_loose = x_loose+5;
   } 
