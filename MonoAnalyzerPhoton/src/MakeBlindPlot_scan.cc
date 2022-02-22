@@ -55,7 +55,7 @@ void doAnalysis(TChain *Mono,TH2F *Plot){
 	Mono->GetEntry(ev);
 	if (ev%10000000==0) cout<<(float)ev<<"/"<<Mono->GetEntries()<<endl;	
 	      if(!(
-        //	    passHLT_Photon200 == 1  &&
+        	    passHLT_Photon200 == 1  &&
 	              Dist < 0.5  
 	            && HIso < 10 
 	            && abs(XYPar0) < 0.6 
