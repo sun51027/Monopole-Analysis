@@ -23,7 +23,7 @@
 #include <string>
 
 float Run, Event, SatSubHits, SubHits, Dist, HIso, XYPar0, XYPar1,XYPar2, RZPar0, RZPar1, RZPar2,Eta, seedFrac, cand_e55, passHLT_Photon200;
-void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare);
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare, string year);
 TChain *SetMonoAddress(TChain *Mono,string year){
 
     Mono->Add(("../../Data/data_"+year+"/*").c_str());
@@ -159,7 +159,7 @@ void MakeBlindPlot_scan(int Unblind, string year){
     a[1] = newPlot->Integral(x[0]+1,x[1],y[0]+1,y[1]);
     a[2] = newPlot->Integral(x[1]+1,x[2],y[0]+1,y[1]);
     a[3] = newPlot->Integral(x[2]+1,x[3],y[0]+1,y[1]);
-    a[5] = newPlot->Integral(x[1]+1,x[2],y[1]+1,y[2]);
+ //   a[5] = newPlot->Integral(x[1]+1,x[2],y[1]+1,y[2]);
     a[8] = newPlot->Integral(x[1]+1,x[2],y[2]+1,y[3]);
     a[6] = newPlot->Integral(x[2]+1,x[3],y[1]+1,y[2]);
     a[9] = newPlot->Integral(x[2]+1,x[3],y[2]+1,y[3]);
@@ -195,23 +195,25 @@ void MakeBlindPlot_scan(int Unblind, string year){
     }
 
     cout<<"f51  "<<(double)x_loose/100<<" , dEdxSig  "<<(double)y_loose/2<<endl;
-    cout << "\t\tExpect\tActual" << endl;
+    cout << "\t\tExpect\terr\tActual\terr" << endl;
 
-    cout << "Region 7:\t\t" << a[7] << endl;
-    cout << "Region 4:\t\t" << a[4] << endl;
-    cout << "Region 1:\t\t" << a[1] << endl;
-    cout << "Region 2:\t\t" << a[2] << endl;
-    cout << "Region 3:\t\t" << a[3] << endl;
+    cout << "Region 7:\t\t\t" << Actual->GetBinContent(1,3)<< '\t'<<Actual->GetBinError(1,3)<<endl;
+    cout << "Region 4:\t\t\t" << Actual->GetBinContent(1,2)<< '\t'<<Actual->GetBinError(1,2)<<endl;
+    cout << "Region 1:\t\t\t" << Actual->GetBinContent(1,1)<< '\t'<<Actual->GetBinError(1,1)<<endl;
+    cout << "Region 2:\t\t\t" << Actual->GetBinContent(2,1)<< '\t'<<Actual->GetBinError(2,1)<<endl;
+    cout << "Region 3:\t\t\t" << Actual->GetBinContent(3,1)<< '\t'<<Actual->GetBinError(3,1)<<endl;
 
-    cout << "Region 8:\t" << a[2]*a[7]/a[1] << '\t' << a[8] << endl;
-    cout << "Region 5:\t" << a[2]*a[4]/a[1] << '\t' << a[5] << endl;
-    cout << "Region 6:\t" << a[3]*a[4]/a[1] << '\t' << a[6] << endl;
+    cout << "Region 8:\t" << Expected->GetBinContent(2,3) << '\t' << Expected->GetBinError(2,3)<<'\t'<<Actual->GetBinContent(2,3)<<'\t'<<Actual->GetBinError(2,3)<< endl;
+    cout << "Region 5:\t" << Expected->GetBinContent(2,2) << '\t' << Expected->GetBinError(2,2)<<'\t'<<Actual->GetBinContent(2,2)<<'\t'<<Actual->GetBinError(2,2)<< endl;
+    cout << "Region 6:\t" << Expected->GetBinContent(3,2) << '\t' << Expected->GetBinError(3,2)<<'\t'<<Actual->GetBinContent(3,2)<<'\t'<<Actual->GetBinError(3,2)<< endl;
 
     if(Unblind==0)
         cout << "Region 9:\t" << a[3]*a[7]/a[1] << '\t' << a[9] << endl;
     else{
-        cout << "Region 9:\t" << (a[3]+a[6])*(a[7]+a[8])/(a[1]+a[2]+a[4]+a[5]) << '\t' << a[9] << endl;
-        Expected->SetBinContent(3, 3, (a[3]+a[6])*(a[7]+a[8])/(a[1]+a[2]+a[4]+a[5]));
+    
+	cout << "Region 9:\t" << Expected->GetBinContent(3,3) << '\t' << Expected->GetBinError(3,3)<<'\t'<<Actual->GetBinContent(3,3)<<'\t'<<Actual->GetBinError(3,3)<< endl;
+//        cout << "Region 9:\t" << (a[3]+a[6])*(a[7]+a[8])/(a[1]+a[2]+a[4]+a[5]) << '\t' << a[9] << endl;
+//        Expecteded->SetBinContent(3, 3, (a[3]+a[6])*(a[7]+a[8])/(a[1]+a[2]+a[4]+a[5]));
     }
 
     newPlot->SetStats(0);
@@ -252,7 +254,7 @@ void MakeBlindPlot_scan(int Unblind, string year){
 				+pow(Actual->GetBinContent(3,2)-Expected->GetBinContent(3,2),2)/(pow(Actual->GetBinError(3,2),2)+pow(Expected->GetBinError(3,2),2)));
 	// Q^2 =Sum((Exp-Actual)^2 / (errExp^2+errAct^2))
 
-	if(ChiSquare[i] < 2){
+//	if(ChiSquare[i] < 2){
 
 	    ofstream fout("output/csv_file/ABCD_"+year+"_"+LooseX+"_"+LooseY+".csv"); 
 	    fout<<year<<",f51,dEdXSig"<<endl;
@@ -263,13 +265,13 @@ void MakeBlindPlot_scan(int Unblind, string year){
 	    fout<<"6,"<<Actual->GetBinContent(3,2)<<","<<Expected->GetBinContent(3,2)<<","<<Expected->GetBinError(3,2)<<","<<Expected->GetBinError(3,2)/Expected->GetBinContent(3,2)<<endl;
 	    fout<<"9,"<<Actual->GetBinContent(3,3)<<","<<Expected->GetBinContent(3,3)<<","<<Expected->GetBinError(3,3)<<","<<Expected->GetBinError(3,3)/Expected->GetBinContent(3,3)<<endl;
 	    fout.close();
-    	}
+  //  	}
     
     x_[i] = x_loose;
     y_[i] = y_loose;
     i++;
 
-    y_loose = y_loose+2;
+    y_loose = y_loose+1;
     
     }
     x_loose = x_loose+5;
@@ -284,7 +286,6 @@ void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare,s
         ofstream Scan_result(("output/csv_file/ABCD_scan_"+year+".csv").c_str()); 
 	Scan_result<<"f51,dEdxSig,Chi-square"<<endl;
 	for(int i =0;i<nloop;i++){
-		if(ChiSquare[i] > 2) continue;	
 		Scan_result<<x_[i]<<","<<y_[i]<<","<<ChiSquare[i]<<endl;
 	}
 
