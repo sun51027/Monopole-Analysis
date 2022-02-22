@@ -23,7 +23,7 @@
 #include <string>
 
 float Run, Event, SatSubHits, SubHits, Dist, HIso, XYPar0, XYPar1,XYPar2, RZPar0, RZPar1, RZPar2,Eta, seedFrac, cand_e55, passHLT_Photon200;
-void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare);
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare ,string year);
 TChain *SetMonoAddress(TChain *Mono,string year){
 
     Mono->Add(("../../Data/data_"+year+"/*").c_str());
@@ -55,8 +55,8 @@ void doAnalysis(TChain *Mono,TH2F *Plot){
 	Mono->GetEntry(ev);
 	if (ev%10000000==0) cout<<(float)ev<<"/"<<Mono->GetEntries()<<endl;	
 	      if(!(
-        	    passHLT_Photon200 == 1  
-	            &&  Dist < 0.5  
+        //	    passHLT_Photon200 == 1  &&
+	              Dist < 0.5  
 	            && HIso < 10 
 	            && abs(XYPar0) < 0.6 
 	            && abs(XYPar1) < 10 
@@ -113,7 +113,7 @@ void MakeBlindPlot_scan(int Unblind, string year){
     doAnalysis(Mono,Plot);
 
  for(int x_loose = 40 ; x_loose < x_tight; ){	//f51 40, 45, 50, 55, 60, 65, 70, 75, 80
-    for(int y_loose = 8; y_loose <= y_tight;){  //dedx 8,10,12,14,16 (4, 5, 6, 7,8)
+    for(int y_loose = 8; y_loose < y_tight;){  //dedx 8,10,12,14,16 (4, 5, 6, 7,8)
 	
     TH2F *newPlot = (TH2F*)Plot->Clone("newPlot");
     string LooseX = to_string(x_loose);
@@ -252,7 +252,7 @@ void MakeBlindPlot_scan(int Unblind, string year){
 				+pow(Actual->GetBinContent(3,2)-Expected->GetBinContent(3,2),2)/(pow(Actual->GetBinError(3,2),2)+pow(Expected->GetBinError(3,2),2)));
 	// Q^2 =Sum((Exp-Actual)^2 / (errExp^2+errAct^2))
 
-	if(ChiSquare[i] < 2){
+	if(ChiSquare[i] < 3){
 	    ofstream fout("output/csv_file/ABCD_"+year+"_"+LooseX+"_"+LooseY+".csv"); 
 	    fout<<year<<",f51,dEdXSig"<<endl;
 	    fout<<","<<(double)x_loose/100<<","<<(double)y_loose/2<<endl;
@@ -275,15 +275,14 @@ void MakeBlindPlot_scan(int Unblind, string year){
 	int nloop = 0;
 	nloop = i;	
 	cout<<"Loop "<<nloop<<endl;
-	ChiSquare_scan(x_,y_,nloop,ChiSquare);
+	ChiSquare_scan(x_,y_,nloop,ChiSquare,year);
 }
-void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare){
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare,string year){
 
-        ofstream Scan_result("output/csv_file/ABCD_scan.csv"); 
+        ofstream Scan_result(("output/csv_file/ABCD_scan"+year+"_branch2.csv").c_str()); 
 	Scan_result<<"f51,dEdxSig,Chi-square"<<endl;
 	for(int i =0;i<nloop;i++){
-		if(ChiSquare[i] > 2) continue;
-		Scan_result<<x_[i]<<","<<y_[i]<<","<<ChiSquare[i]<<endl;
+		if(ChiSquare[i] < 3)	Scan_result<<x_[i]<<","<<y_[i]<<","<<ChiSquare[i]<<endl;
 	}
 
 }
