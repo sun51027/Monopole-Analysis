@@ -252,35 +252,40 @@ void MakeBlindPlot_scan(int Unblind, string year){
 				+pow(Actual->GetBinContent(3,2)-Expected->GetBinContent(3,2),2)/(pow(Actual->GetBinError(3,2),2)+pow(Expected->GetBinError(3,2),2)));
 	// Q^2 =Sum((Exp-Actual)^2 / (errExp^2+errAct^2))
 
+	if(ChiSquare[i] < 2){
+
+	    ofstream fout("output/csv_file/ABCD_"+year+"_"+LooseX+"_"+LooseY+".csv"); 
+	    fout<<year<<",f51,dEdXSig"<<endl;
+	    fout<<","<<(double)x_loose/100<<","<<(double)y_loose/2<<endl;
+	    fout<<"Region,actual,expect,error,uncertainty"<<endl;
+	    fout<<"5,"<<Actual->GetBinContent(2,2)<<","<<Expected->GetBinContent(2,2)<<","<<Expected->GetBinError(2,2)<<","<<Expected->GetBinError(2,2)/Expected->GetBinContent(2,2)<<endl;
+	    fout<<"8,"<<Actual->GetBinContent(2,3)<<","<<Expected->GetBinContent(2,3)<<","<<Expected->GetBinError(2,3)<<","<<Expected->GetBinError(2,3)/Expected->GetBinContent(2,3)<<endl;
+	    fout<<"6,"<<Actual->GetBinContent(3,2)<<","<<Expected->GetBinContent(3,2)<<","<<Expected->GetBinError(3,2)<<","<<Expected->GetBinError(3,2)/Expected->GetBinContent(3,2)<<endl;
+	    fout<<"9,"<<Actual->GetBinContent(3,3)<<","<<Expected->GetBinContent(3,3)<<","<<Expected->GetBinError(3,3)<<","<<Expected->GetBinError(3,3)/Expected->GetBinContent(3,3)<<endl;
+	    fout.close();
+    	}
+    
     x_[i] = x_loose;
     y_[i] = y_loose;
     i++;
 
-    ofstream fout("output/csv_file/ABCD_"+year+"_"+LooseX+"_"+LooseY+".csv"); 
-    fout<<year<<",f51,dEdXSig"<<endl;
-    fout<<","<<(double)x_loose/100<<","<<(double)y_loose/2<<endl;
-    fout<<"Region,actual,expect,error,uncertainty"<<endl;
-    fout<<"5,"<<Actual->GetBinContent(2,2)<<","<<Expected->GetBinContent(2,2)<<","<<Expected->GetBinError(2,2)<<","<<Expected->GetBinError(2,2)/Expected->GetBinContent(2,2)<<endl;
-    fout<<"8,"<<Actual->GetBinContent(2,3)<<","<<Expected->GetBinContent(2,3)<<","<<Expected->GetBinError(2,3)<<","<<Expected->GetBinError(2,3)/Expected->GetBinContent(2,3)<<endl;
-    fout<<"6,"<<Actual->GetBinContent(3,2)<<","<<Expected->GetBinContent(3,2)<<","<<Expected->GetBinError(3,2)<<","<<Expected->GetBinError(3,2)/Expected->GetBinContent(3,2)<<endl;
-    fout<<"9,"<<Actual->GetBinContent(3,3)<<","<<Expected->GetBinContent(3,3)<<","<<Expected->GetBinError(3,3)<<","<<Expected->GetBinError(3,3)/Expected->GetBinContent(3,3)<<endl;
-    fout.close();
-    
     y_loose = y_loose+2;
+    
     }
     x_loose = x_loose+5;
   } 
 	int nloop = 0;
 	nloop = i;	
 	cout<<"Loop "<<nloop<<endl;
-	ChiSquare_scan(x_,y_,nloop,ChiSquare);
+	ChiSquare_scan(x_,y_,nloop,ChiSquare,year);
 }
-void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare){
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare,string year){
 
-        ofstream Scan_result("output/csv_file/ABCD_scan.csv"); 
+        ofstream Scan_result(("output/csv_file/ABCD_scan_"+year+".csv").c_str()); 
 	Scan_result<<"f51,dEdxSig,Chi-square"<<endl;
 	for(int i =0;i<nloop;i++){
-	Scan_result<<x_[i]<<","<<y_[i]<<","<<ChiSquare[i]<<endl;
+		if(ChiSquare[i] > 2) continue;	
+		Scan_result<<x_[i]<<","<<y_[i]<<","<<ChiSquare[i]<<endl;
 	}
 
 }
