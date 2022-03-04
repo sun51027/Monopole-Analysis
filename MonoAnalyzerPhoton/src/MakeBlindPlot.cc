@@ -2,14 +2,15 @@
 //
 //	MakeBlindPlot.cc
 //	Shih Lin
-//	root -l …….root 
-//	.L MakeBlindPlot.C
-//	TH2F *Plot = MakeBlindPlotSig(treeName, 1)
-// 	Unblind 
+//	root -l 'MakeBlindPlot_scan.cc(Unblind*,"year**")'
+// 	*Unblind(int) 
 // 	 0 to show 5 regions
 // 	 1 to show 8, 
 // 	 2 to show full signal, 
 // 	 3 for MC
+// 	**year (string)
+// 	 16 : 2016 + 2016 APV
+// 	 1718 : 2017 + 2018
 //	
 /////////////////////////////////
 #include <vector>
@@ -20,35 +21,20 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-void MakeBlindPlot(int Unblind, string year){
-//TH2F* MakeBlindPlotSig(TChain *Mono, int Unblind){
-    // Unblind is 0 to show 5 regions, 1 to show 8, 2 to show full signal, 3 for MC
+float Run, Event, SatSubHits, SubHits, Dist, HIso, XYPar0, XYPar1,XYPar2, RZPar0, RZPar1, RZPar2,Eta, seedFrac, cand_e55, passHLT_Photon200;
+void ChiSquare_scan(double *x_,double *y_, int nloop, vector<double> ChiSquare ,string year);
+TChain *SetMonoAddress(TChain *Mono,string year){
 
-	TCanvas *c = new TCanvas("c","",800,600);
-	
-    double x[4]={0,60, 85, 105};
-    double y[4]={0,14, 18, 60};
-    double VetoX = 0.0;
-    double VetoY = 0.0;
+    //Mono->Add(("../../Data/data_"+year+"/*").c_str());
+    if(year == "1718"){
+	    Mono->Add(("../../Data/data_"+year+"/data_2017/*").c_str());
+	    Mono->Add(("../../Data/data_"+year+"/data_2018/*").c_str());
+    }
+    else{
+	    Mono->Add(("../../Data/data_"+year+"/data_2016/*").c_str());
+	    Mono->Add(("../../Data/data_"+year+"/data_2016APV/*").c_str());
+    }	
 
-    double xbins[4] = {x[0]/100, x[1]/100, x[2]/100, x[3]/100};//0, 0.60, 0.85,1.05 x-axis
-    double ybins[4] = {y[0]/2, y[1]/2, y[2]/2, y[3]/2};//0, 7, 9, 30 y-axis
-    
-    TChain *Mono  = new TChain("monopoles");
-    Mono->Add(("../../Data/data_"+year+"/*").c_str());
-//    Mono->Add("../../Data/data_2018/Monopole2018Data_AB_trimmed.root");
-//    Mono->Add("../../Data/data_2018/Monopole2018Data_C_trimmed.root");
-//    Mono->Add("../../Data/data_2018/Monopole2018Data_D_trimmed.root");
- 
-    TH2F *Plot = new TH2F("Plot", "Data", 105, 0, 1.05, 60, 0, 30);
-    Plot->SetXTitle("Frac51");
-    Plot->SetYTitle("HighDeDx Significance");
-    TH2F *Actual = new TH2F("Actual","",3,xbins,3,ybins);
-    TH2F *Expected = new TH2F("Expected","",3,xbins,3,ybins);
-
-    float Run, Event, SatSubHits, SubHits, Dist, HIso, XYPar0, XYPar1,XYPar2, RZPar0, RZPar1, RZPar2,Eta, seedFrac, cand_e55, passHLT_Photon200;
-
-// Take from Trim.c
     Mono->SetBranchAddress("run", &Run);
     Mono->SetBranchAddress("event", &Event);// every Event
     Mono->SetBranchAddress("Dist", &Dist);
@@ -65,6 +51,10 @@ void MakeBlindPlot(int Unblind, string year){
     Mono->SetBranchAddress("seedFrac", &seedFrac);
     Mono->SetBranchAddress("cand_e55", &cand_e55);
     Mono->SetBranchAddress("passHLT_Photon200", &passHLT_Photon200);
+    return Mono;
+}
+
+void doAnalysis(TChain *Mono,TH2F *Plot,string year){
     int LastEvent = -1;
     vector<pair<float,float>> Point;
     vector<double> key;
@@ -76,8 +66,8 @@ void MakeBlindPlot(int Unblind, string year){
 	if (ev%10000000==0) cout<<(float)ev<<"/"<<Mono->GetEntries()<<endl;	
 		// you need to apply these preselection and trigger cut
 		// so that you can "estimate" the background !!( those cutted entries are not relate with our bkg!!)
+	if(year == "16"){
 	      if(!(
-    //    	    passHLT_Photon200 == 1  
 	              Dist < 0.5  
 	            && HIso < 10 
 	            && abs(XYPar0) < 0.6 
@@ -86,9 +76,26 @@ void MakeBlindPlot(int Unblind, string year){
 	            && abs(RZPar0) < 10 
 	            && abs(RZPar1) < 999 
 	            && abs(RZPar2) < 0.005 
-	            && cand_e55 > 200 
-	            &&  sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) >2 
+	            && cand_e55 > 175
+//	            &&  sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) >2 
 	             ) ) continue;
+	}
+	else if(year == "1718"){
+	      if(!(
+	  	    passHLT_Photon200 == 1  &&
+	              Dist < 0.5  
+	            && HIso < 10 
+	            && abs(XYPar0) < 0.6 
+	            && abs(XYPar1) < 10 
+	            && abs(XYPar2) > 1000 
+	            && abs(RZPar0) < 10 
+	            && abs(RZPar1) < 999 
+	            && abs(RZPar2) < 0.005 
+	            && cand_e55 > 200
+//	            &&  sqrt(-TMath::Log(TMath::BinomialI(0.07, SubHits, SatSubHits))) >2 
+	             ) ) continue;
+
+	}
 
 //	if(Event == LastEvent ) sameEvent++;
 	if((int)Event!=LastEvent && Point.size()>0){
@@ -118,6 +125,50 @@ void MakeBlindPlot(int Unblind, string year){
 	//Besides, since we need to get new candidate info from new even
 	//so we "clear" the Point, then put new candidate into Point.
    }
+}
+
+
+void MakeBlindPlot(int Unblind, string year){
+
+    TCanvas *c = new TCanvas("c","",800,600);
+    TChain *Mono  = new TChain("monopoles");
+    
+    SetMonoAddress(Mono,year);
+
+    double f51_loose = 0; //0.6
+    double dEdx_loose = 0; // 6.5
+	
+    if( year == "16"){
+	
+	f51_loose = 60; //0.6
+	dEdx_loose = 13; // 6.5
+    }
+    else if( year == "1718"){
+
+	f51_loose = 75; // 0.75
+	dEdx_loose = 14; // 7
+	
+    }
+	
+	cout<<f51_loose<<" "<<dEdx_loose<<endl;
+
+    double x[4]={0,f51_loose, 85, 105};
+    double y[4]={0,dEdx_loose, 18, 60};
+    double VetoX = 0.0;
+    double VetoY = 0.0;
+
+    double xbins[4] = {x[0]/100, x[1]/100, x[2]/100, x[3]/100};//0, 0.60, 0.85,1.05 x-axis
+    double ybins[4] = {y[0]/2, y[1]/2, y[2]/2, y[3]/2};//0, 7, 9, 30 y-axis
+    
+ 
+    TH2F *Plot = new TH2F("Plot", "Data", 105, 0, 1.05, 60, 0, 30);
+    Plot->SetXTitle("Frac51");
+    Plot->SetYTitle("HighDeDx Significance");
+
+    doAnalysis(Mono,Plot,year);
+
+    TH2F *Actual = new TH2F("Actual","",3,xbins,3,ybins);
+    TH2F *Expected = new TH2F("Expected","",3,xbins,3,ybins);
 
     int LowEdgeX, LowEdgeY;
     //Unblind is 0 to show 5 regions, 1 to show 8 regions, 2 to show full signal, 3 for MC
@@ -207,7 +258,7 @@ void MakeBlindPlot(int Unblind, string year){
     Plot->SetStats(0);
     Plot->SetLineColor(51);
     Plot->SetFillColor(51);
-    Actual->SetMarkerColor(kBlack);//the color of words for actual
+    Actual->SetMarkerColor(kBlack);
     Actual->SetLineColor(kBlack);
     Actual->SetMarkerSize(1.5);
     Expected->SetMarkerColor(kRed);
@@ -238,9 +289,6 @@ void MakeBlindPlot(int Unblind, string year){
     l1->SetLineStyle(2); l2->SetLineStyle(2); l3->SetLineStyle(2); l4->SetLineStyle(2);
     l1->Draw(); l2->Draw(); l3->Draw(); l4->Draw();
 
-//    TPave *pave = new TPave(0.80,0.30,1.0,1.0,4,"br");
-//    pave->Draw();
-
-//    c->SaveAs("ABCD_1.pdf"); 
+    c->SaveAs("ABCD_plot.pdf"); 
 
 }	
