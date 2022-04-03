@@ -10,12 +10,12 @@
 //	Built by Shih Lin 2021 10 27
 //
 /////////////////////////
-void MakeNewTree_fromTrim(int option, string dataset)
+void MakeNewTree_fromTrim(int option, string year)
 {
-	TFile *fin = new TFile(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Data/data_2018/Monopole2018Data_"+dataset+"_trimmed.root").c_str());
-        TTree *tree = (TTree*)fin->Get("monopoles");
 
- 	TFile *oFile = new TFile(("../Data/Blind/BlindedData_2018"+dataset+".root").c_str(),"recreate");
+	TChain *tree = new TChain("monopoles");
+	tree->Add(("../Data/data_1718/data_"+year+"/*").c_str());
+ 	TFile *oFile = new TFile(("../Data/Blind/BlindedData_"+year+".root").c_str(),"recreate");
 	TTree *NewTree = new TTree("monopoles","Blinded data");
 
         float passHLT_Photon200;
@@ -76,21 +76,21 @@ void MakeNewTree_fromTrim(int option, string dataset)
 	int nPoint = 0;
 
 
-	NewTree->Branch("SubHits",&m_SubHits);
-	NewTree->Branch("SatSubHits",&m_SatSubHits);
-	NewTree->Branch("XYPar0",&m_XYPar0);
-	NewTree->Branch("XYPar1",&m_XYPar1);
-	NewTree->Branch("XYPar2",&m_XYPar2);
-	NewTree->Branch("RZPar0",&m_RZPar0);
-	NewTree->Branch("RZPar1",&m_RZPar1);
-	NewTree->Branch("RZPar2",&m_RZPar2);
-	NewTree->Branch("Eta",&m_Eta);
-	NewTree->Branch("seedFrac",&m_seedFrac);
-	NewTree->Branch("e55",&m_e55);
-	NewTree->Branch("Dist",&m_Dist);
-	NewTree->Branch("HIso",&m_HIso);
-	NewTree->Branch("dEdxSig",&m_dEdxSig);
-	NewTree->Branch("Point_N",&m_nPoint);
+	NewTree->Branch("cand_SubHits",&m_SubHits);
+	NewTree->Branch("cand_SatSubHits",&m_SatSubHits);
+	NewTree->Branch("cand_XYPar0",&m_XYPar0);
+	NewTree->Branch("cand_XYPar1",&m_XYPar1);
+	NewTree->Branch("cand_XYPar2",&m_XYPar2);
+	NewTree->Branch("cand_RZPar0",&m_RZPar0);
+	NewTree->Branch("cand_RZPar1",&m_RZPar1);
+	NewTree->Branch("cand_RZPar2",&m_RZPar2);
+	NewTree->Branch("cand_eta",&m_Eta);
+	NewTree->Branch("cand_f51",&m_seedFrac);
+	NewTree->Branch("cand_e55",&m_e55);
+	NewTree->Branch("cand_dist",&m_Dist);
+	NewTree->Branch("cand_HIso",&m_HIso);
+	NewTree->Branch("cand_dEdXSig",&m_dEdxSig);
+	NewTree->Branch("cand_N",&m_nPoint);
 	NewTree->Branch("event",&m_event);
 	NewTree->Branch("run",&m_run);
 	NewTree->Branch("passHLT_Photon200", &passHLT_Photon200_);
@@ -166,7 +166,7 @@ void MakeNewTree_fromTrim(int option, string dataset)
 			
 	   if(ev%1000000==0) cout << ev << " / " << tree->GetEntries() << endl;
 	} // end of entry loop
-	cout<<"finish option "<<option<<" dataset "<<dataset<<endl;
+	cout<<"finish option "<<option<<" year "<<year<<endl;
 	oFile->cd();
 	NewTree->Write();
 
