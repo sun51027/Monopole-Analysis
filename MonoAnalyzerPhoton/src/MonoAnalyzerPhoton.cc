@@ -20,22 +20,22 @@
 #include "../interface/MonoCuts.h"
 using namespace std;
 
-void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option)
+void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option,string year)
 {
 	Clear();
-	cout<<"ev "<<ev<<"------------------------------------"<<endl;
+
 	for(unsigned c=0;c<nCandidates;c++){
 
 		MonoCandidate &cands = cand[c];
 		bool QualCut = evalQuality(cands);
 		bool ECut = evalE(cands);
+		bool ECut16 = evalE_16(cands);
 		bool F51Cut = evalF51(cands);
 		bool dEdXCut = evaldEdX(cands);
-		bool F51looseCut = evalF51loose(cands);
-		bool dEdXlooseCut = evaldEdXloose(cands);
 
 		//count for total events without TRG	
 		if(TRG) CutFlowCand_TRG.push_back(cands);
+
 		//N-1 cut and relative efficiency
 		if( ECut && F51Cut && dEdXCut &&TRG) N1CutCand_Qual.push_back(cands); 
 		if( QualCut && F51Cut && dEdXCut &TRG) N1CutCand_Energy.push_back(cands);
@@ -50,9 +50,12 @@ void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, uns
 		//signal efficiency
 
 		if(TRG && QualCut ) CutFlowCand_Qual.push_back(cands); 
-		if(TRG && QualCut && ECut ) CutFlowCand_Energy.push_back(cands);
-		if(TRG && QualCut && ECut && F51looseCut) CutFlowCand_looseF51.push_back(cands);
-		if(TRG && QualCut && ECut && F51looseCut && dEdXlooseCut) CutFlowCand_looseDedx.push_back(cands);
+		if(year == "2016" || year == "2016APV"){
+			if(TRG && QualCut && ECut16 ) CutFlowCand_Energy.push_back(cands);
+		}
+		else{ 
+			if(TRG && QualCut && ECut ) CutFlowCand_Energy.push_back(cands);
+		}
 
 	}//for cand loop
 
@@ -78,40 +81,26 @@ void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, uns
 	{
 		E_count++;	
 		FillFlowHistogram(1,CutFlowCand_Energy,matching_option);
-		//PrintInfo(CutFlowCand_Energy);
-		//cout<<"    E_count "<<E_count<<endl;
-	}
-	//
-	sort(CutFlowCand_looseF51.begin(),CutFlowCand_looseF51.begin()+CutFlowCand_looseF51.size());
-	if(CutFlowCand_looseF51.size()>0)
-	{
-		f51_loose_count++;
-	}
-	sort(CutFlowCand_looseDedx.begin(),CutFlowCand_looseDedx.begin()+CutFlowCand_looseDedx.size());
-	if(CutFlowCand_looseDedx.size()>0)
-	{
-		dEdX_loose_count++;
-		MonoCandidate &selectedCand = CutFlowCand_looseDedx[0];
-		bool F51Cut = evalF51(selectedCand);
-		if(F51Cut) CutFlowCand_F51.push_back(selectedCand);
-	}
 
+		MonoCandidate &Cand = CutFlowCand_Energy[0];
+		bool F51Cut = evalF51(Cand);
+		if(F51Cut) CutFlowCand_F51.push_back(Cand);
+	}
 	sort(CutFlowCand_F51.begin(),CutFlowCand_F51.begin()+CutFlowCand_F51.size());
 	if(CutFlowCand_F51.size()>0)
 	{
 		f51_count++;	
-		//cout<<"    f51_count "<<f51_count<<endl;
 		FillFlowHistogram(2,CutFlowCand_F51,matching_option);
 
-		MonoCandidate &Cand = CutFlowCand_F51[0];
-		bool dEdXCut = evaldEdX(Cand);
-		if(dEdXCut) CutFlowCand_Dedx.push_back(Cand);
+		MonoCandidate &SelectedCand = CutFlowCand_F51[0];
+		bool dEdXCut = evaldEdX(SelectedCand);
+		if(dEdXCut) CutFlowCand_Dedx.push_back(SelectedCand);
+
 	}
 	sort(CutFlowCand_Dedx.begin(),CutFlowCand_Dedx.begin()+CutFlowCand_Dedx.size());
 	if(CutFlowCand_Dedx.size()>0)
 	{
 		dEdX_count++;	
-		//cout<<"    dEdX_count "<<dEdX_count<<endl;
 		FillFlowHistogram(3,CutFlowCand_Dedx,matching_option);
 	}
 
@@ -173,6 +162,8 @@ void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matchin
 			z.GetPlot(F51)->Fill(Matched[i].f51_);
 			z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
 			z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+			x.GetProfile(PileUp_f51)->Fill(Matched[i].NPV_,Matched[i].f51_);
+			x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].f51_);
 			if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 			if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 			if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
@@ -187,6 +178,8 @@ void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matchin
 			z.GetPlot(F51)->Fill(Cand[i].f51_);
 			z.GetPlot(HcalIso)->Fill(Cand[i].hIso_);
 			z.GetPlot(ABCD)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
+			x.GetProfile(PileUp_f51)->Fill(Cand[i].NPV_,Cand[i].f51_);
+			x.GetProfile(PileUp_DedXSig)->Fill(Cand[i].NPV_,Cand[i].f51_);
 			if(TMath::Abs(Cand[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
 			if(TMath::Abs(Cand[i].eta_) > 1.479 && TMath::Abs(Cand[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
 			if(TMath::Abs(Cand[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Cand[i].f51_,Cand[i].dEdXSig_);
@@ -211,6 +204,9 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 			z.GetPlot(F51)->Fill(Matched[i].f51_);
 			z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
 			z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+
+			x.GetProfile(PileUp_f51)->Fill(Matched[i].NPV_,Matched[i].f51_);
+			x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].f51_);
 			if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 			if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 			if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
@@ -226,6 +222,9 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 			z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
 			z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
 			z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+
+			x.GetProfile(PileUp_f51)->Fill(CutFlowCand[i].NPV_,CutFlowCand[i].f51_);
+			x.GetProfile(PileUp_DedXSig)->Fill(CutFlowCand[i].NPV_,CutFlowCand[i].f51_);
 			if(TMath::Abs(CutFlowCand[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 			if(TMath::Abs(CutFlowCand[i].eta_) > 1.479 && TMath::Abs(CutFlowCand[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 			if(TMath::Abs(CutFlowCand[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
@@ -265,32 +264,6 @@ vector<MonoCandidate> MonoCuts::Matching(vector<MonoCandidate> Cand){
 	}
 	if(Flag==1)	      MatchedEvent++;
 
-	Flag=0;
-	//------test--------//
-	//	cout<<"n mono "<<Matched.size()<<endl;
-	/*	for(int i=0;i<Matched.size();i++){
-		double m_deltaR=0;
-		double am_deltaR=0;
-		m_deltaR = sqrt(pow(Matched[i].eta_-Matched[0].mono_eta_,2)+
-		pow(Matched[i].phi_-Matched[0].mono_phi_,2));
-		am_deltaR= sqrt(pow(Matched[i].eta_-Matched[0].amon_eta_,2)+
-		pow(Matched[i].phi_-Matched[0].amon_phi_,2));
-		cout<<"          candidate           monoGen         antimonoGen"<<endl;
-		cout<<"eta      "<<setprecision(5)<<Matched[i].eta_<<setw(20)<<Matched[i].mono_eta_
-		<<setw(20)<<Matched[i].amon_eta_<<endl;
-		cout<<"phi      "<<setprecision(5)<<Matched[i].phi_<<setw(20)<<Matched[i].mono_phi_
-		<<setw(20)<<Matched[i].amon_phi_<<endl;
-		cout<<"m deltaR "<<m_deltaR<<endl;
-		cout<<"a deltaR "<<am_deltaR<<endl;
-		cout<<i<<endl;
-		cout<<"     eta "<<setprecision(5)<<Matched[i].eta_<<endl;
-		cout<<"     phi "<<setprecision(5)<<Matched[i].phi_<<endl;
-		cout<<"     E55 "<<setprecision(5)<<Matched[i].e55_<<endl;
-		cout<<" dEdxSig "<<setprecision(5)<<Matched[i].dEdXSig_<<endl;
-		cout<<"     f51 "<<setprecision(5)<<Matched[i].f51_<<endl;
-		cout<<"   Swiss "<<setprecision(5)<<Matched[i].Cross_<<endl;
-		cout<<"----------------------------"<<endl;
-		}*/
 	return Matched;
 }
 void MonoCuts::Clear(){
@@ -366,7 +339,8 @@ const double MonoCuts::rzp2Cut_=0.005;
 const double MonoCuts::distCut_ = 0.5;
 const double MonoCuts::hIsoCut_= 10;
 const double MonoCuts::dEdXSigCut_ = 9;
-const double MonoCuts::e55Cut_ = 70;
+const double MonoCuts::e55Cut_ = 200;
+const double MonoCuts::e55Cut2016_ = 175;
 const double MonoCuts::f51Cut_ = 0.85;
 const double MonoCuts::photonCut_ = 200;
 const double MonoCuts::dEdXSig_looseCut_ = 7;
@@ -427,6 +401,7 @@ void MonoAnalyzerPhoton(string year, string mass,bool matching_option)
 	double amon_phi;
 
 	tree->SetBranchAddress("event",&event);
+	tree->SetBranchAddress("NPV",&NPV);
 	tree->SetBranchAddress("trigResult",&trigResults);
 	tree->SetBranchAddress("trigNames",&trigNames);
 	tree->SetBranchAddress("passHLT_Photon200" , &passHLT_Photon200);
@@ -521,9 +496,9 @@ void MonoAnalyzerPhoton(string year, string mass,bool matching_option)
 						);
 			}
 		}
-		noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev,matching_option);		
-		if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev,matching_option);
-		else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev,matching_option);
+		noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev,matching_option,year);		
+		if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev,matching_option,year);
+		else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev,matching_option,year);
 	}//for every event loop
 
 	noTrgAnalysis.WritePlots(oFile);

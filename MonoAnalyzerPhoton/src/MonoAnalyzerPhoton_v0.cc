@@ -27,7 +27,7 @@
 #include "../interface/MonoCuts.h"
 using namespace std;
 
-  void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option)
+  void MonoCuts::doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option,string year)
   {
 	Clear();
 //	cout<<"ev "<<ev<<"------------------------------------"<<endl;
@@ -351,7 +351,7 @@ using namespace std;
   const double MonoCuts::f51Cut_ = 0.85;
   const double MonoCuts::photonCut_ = 200;
 
-void MonoAnalyzerPhoton(string year, string mass,bool matching_option)
+void MonoAnalyzerPhoton_v0(string year, string mass,bool matching_option)
 {
 	string matching;
 	if(matching_option == 0){
@@ -501,9 +501,9 @@ void MonoAnalyzerPhoton(string year, string mass,bool matching_option)
 			);
 			}
 		}
-			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev,matching_option);		
-			if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev,matching_option);
-			else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev,matching_option);
+			noTrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,true,ev,matching_option,year);		
+			if( year == "2016" || year == "2016APV")      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon175,ev,matching_option,year);
+			else      TrgAnalysis.doAnalysis(cand,photon,nCandidates,nPhoton,passHLT_Photon200,ev,matching_option,year);
 	}//for every event loop
 	
 	noTrgAnalysis.WritePlots(oFile);

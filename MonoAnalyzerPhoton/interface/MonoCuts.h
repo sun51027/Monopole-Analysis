@@ -7,12 +7,11 @@ public:
   MonoCuts(){}
 
   MonoCuts(const string &trName,TFile *openFile):trigName_(trName){
-	
+	//Init();	
 	//create a new directory in the output file
 	openFile->mkdir(trName.c_str());
-	cout<<"create directory "<<trName.c_str()<<endl;	
+
 	//create histrogram N-1 cutf for No trigger
-	
 	NoCutPlot.resize(1U);
 	PlotSet &x = NoCutPlot[0];
         x.CreatPlot(FracSatVNstrips,new TH2D("FracSatVNstrips","",100,0,1000,100,0,1));
@@ -24,17 +23,17 @@ public:
         x.CreatPlot(RZcurv,new TH1D("RZcurv","",100,-0.01,0.01));
 	x.CreatPlot(E55,new TH1D("E55","",100,-1,1200));
         x.CreatPlot(F51,new TH1D("F51","",100,0.2,1.1));
-        x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,10));
+        x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,30));
         x.CreatPlot(ABCD,new TH2D("ABCD","",100,0,1.1,100,0,30));
 
-        NoCutProfile.resize(10);
+        NoCutProfile.resize(1U);
         PlotSet &p = NoCutProfile[0];
-	cout<<"p "<<&p<<endl;
         p.CreatProfile(EcalBarrel,new TProfile("EcalBarrel","",30,0,1.1,0,30));
         p.CreatProfile(EcalEndCup,new TProfile("EcalEndCup","",30,0,1.1,0,30));
         p.CreatProfile(EcalAll ,new TProfile("EcalAll","",30,0,1.1,0,30));
+        p.CreatProfile(PileUp_DedXSig ,new TProfile("PileUp_DedXSig","",6,0,60,-1,30));
+        p.CreatProfile(PileUp_f51 ,new TProfile("PileUp_f51","",6,0,60,-0.1,1));
 
-	cout<<"Create Plots successfully"<<endl;
  	cutName_[0] = "Quality_";
  	cutName_[1] = "Energy_";
 	cutName_[2] = "F51_";
@@ -56,14 +55,13 @@ public:
 	   z.CreatPlot(RZcurv,new TH1D((cutn1name+"RZcurv").c_str(),"",100,-0.01,0.01));
            z.CreatPlot(E55,new TH1D((cutn1name+"E55").c_str(),"",100,-1,1200));
            z.CreatPlot(F51,new TH1D((cutn1name+"F51").c_str(),"",100,0.2,1.1));
-           z.CreatPlot(HcalIso,new TH1D((cutn1name+"HcalIso").c_str(),"",100,-1,10));
+           z.CreatPlot(HcalIso,new TH1D((cutn1name+"HcalIso").c_str(),"",100,-1,30));
            z.CreatPlot(ABCD,new TH2D((cutn1name+"ABCD").c_str(),"",100,0,1.1,100,0,30));
 	}
 
 	CutFlow.resize(10); 
         Profile.resize(100);
 	for( int c = 0;c<nCut-1;c++){
-	   // nCut-1 is for ignoring HLT_ ,omit extra plots	
 	   PlotSet &y = CutFlow[c];
 	   string cutflowName = "Flow_"+cutName_[c];
            y.CreatPlot(FracSatVNstrips,new TH2D((cutflowName+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
@@ -75,22 +73,22 @@ public:
            y.CreatPlot(RZcurv,new TH1D((cutflowName+"RZcurv").c_str(),"",100,-0.01,0.01));
            y.CreatPlot(E55,new TH1D((cutflowName+"E55").c_str(),"",100,-1,1200));
            y.CreatPlot(F51,new TH1D((cutflowName+"F51").c_str(),"",100,0.2,1.1));
-           //y.CreatPlot(Spike,new TH1D((cutflowName+"Spike").c_str(),"",100,-5,5));
-           y.CreatPlot(HcalIso,new TH1D((cutflowName+"HcalIso").c_str(),"",100,-1,10));
+           y.CreatPlot(HcalIso,new TH1D((cutflowName+"HcalIso").c_str(),"",100,-1,30));
            y.CreatPlot(ABCD,new TH2D((cutflowName+"ABCD").c_str(),"",100,0,1.1,100,0,30));
 
        	   PlotSet &w = Profile[c];
        	   w.CreatProfile(EcalBarrel ,new TProfile((cutflowName+"EcalBarrel").c_str(),"",30,0,1.1,0,30));
        	   w.CreatProfile(EcalEndCup ,new TProfile((cutflowName+"EcalEndCup").c_str(),"",30,0,1.1,0,30));
        	   w.CreatProfile(EcalAll ,new TProfile((cutflowName+"EcalAll").c_str(),"",30,0,1.1,0,30));
-           cout<<"good cutflow"<<cutflowName<<endl;
+           w.CreatProfile(PileUp_DedXSig ,new TProfile((cutflowName+"PileUp_DedXSig").c_str(),"",6,0,60,-1,30));
+           w.CreatProfile(PileUp_f51 ,new TProfile((cutflowName+"PileUp_f51").c_str(),"",6,0,60,-0.1,1));
 
 	}
-
   }
+  ~MonoCuts(){
 
-  ~MonoCuts(){}
-  void doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option);
+	}
+  void doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option,string year);
   void doAnalysis_data(vector<MonoCandidate> &cand,unsigned nParticle,bool passHLT_Photon200,unsigned ev);
   void FillNoCutHistogram(int n,vector<MonoCandidate> Cand,bool matching);
   void FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand,bool matching);
@@ -99,7 +97,6 @@ public:
   void Clear();
   void WritePlots(TFile *oFile);
   void PrintInfo(vector<MonoCandidate> Cand){	
-        
 	cout<<"event tag"<<Cand[0].event_<<endl;
 	for(int i=0;i<Cand.size();i++){
 		double m_deltaR =0;
@@ -135,16 +132,16 @@ public:
 	}
 
 	//define: photon-monopole angle<0.15 is photon-like
-//	for(int i=0;i<HighPtPhoton.size();i++){
-//		double photonMono_deltaR = 0;
-//		photonMono_deltaR = sqrt(pow(CutFlowCand_Dedx[i].eta_-HighPtPhoton[j].pho_eta_,2)+
-//        	               	         pow(CutFlowCand_Dedx[i].phi_-HighPtPhoton[j].pho_phi_,2));
-//		if(photonMono_deltaR<0.15){
-//			cout<<"deltaR "<<photonMono_deltaR<<endl;
-//			cout<<"photon-like monopole"<<endl;
-//			photonLike++;// otherwise not photon-like monopole
-//		}
-//	}
+	for(int i=0;i<HighPtPhoton.size();i++){
+		double photonMono_deltaR = 0;
+	//	photonMono_deltaR = sqrt(pow(CutFlowCand_Dedx[i].eta_-HighPtPhoton[j].pho_eta_,2)+
+        //	               	         pow(CutFlowCand_Dedx[i].phi_-HighPtPhoton[j].pho_phi_,2));
+		if(photonMono_deltaR<0.15){
+			cout<<"deltaR "<<photonMono_deltaR<<endl;
+			cout<<"photon-like monopole"<<endl;
+			photonLike++;// otherwise not photon-like monopole
+		}
+	}
 	cout<<endl;
 	cout<<"=================================="<<endl;
   }
@@ -192,8 +189,11 @@ public:
   static const double hIsoCut_ ;
   static const double dEdXSigCut_ ;
   static const double e55Cut_ ;
+  static const double e55Cut2016_ ;
   static const double f51Cut_ ;
   static const double photonCut_ ;
+  static const double dEdXSig_looseCut_ ;
+  static const double f51_looseCut_ ;
    // if you want to set parameter in the class, you should add constexpr
   //  ex. constexpr static const double x=1;
 
@@ -218,6 +218,7 @@ private:
 			&& mc.dist_ < distCut_  && mc.hIso_ <hIsoCut_  
 			&& TMath::Abs( mc.rzp2_) < rzp2Cut_ && TMath::Abs(mc.rzp1_) < rzp1Cut_ && TMath::Abs(mc.rzp0_) < rzp0Cut_;  }
   bool evalE(MonoCandidate &mc) { return mc.e55_ > e55Cut_; }
+  bool evalE_16(MonoCandidate &mc) { return mc.e55_ > e55Cut2016_; }
   bool evalF51(MonoCandidate &mc) { return mc.f51_ > f51Cut_ ; }
   bool evaldEdX(MonoCandidate &mc) { return mc.dEdXSig_ > dEdXSigCut_ ;}
   bool evalPhoton(Photon &mc){ return mc.pho_pt_ > photonCut_; }
@@ -227,11 +228,16 @@ private:
 			&& TMath::Abs( mc.rzp2_) < rzp2Cut_ && TMath::Abs(mc.rzp1_) < rzp1Cut_ && TMath::Abs(mc.rzp0_) < rzp0Cut_
 			&& mc.e55_ > e55Cut_ && mc.dEdXSig_ > dEdXSigCut_;  }
  
+  bool evalF51loose(MonoCandidate &mc) { return mc.f51_ > f51_looseCut_ ; }
+  bool evaldEdXloose(MonoCandidate &mc) { return mc.dEdXSig_ > dEdXSig_looseCut_ ;}
+
   vector<MonoCandidate> CutFlowCand_TRG;
   vector<MonoCandidate> CutFlowCand_Qual;
   vector<MonoCandidate> CutFlowCand_Energy;
   vector<MonoCandidate> CutFlowCand_F51;
   vector<MonoCandidate> CutFlowCand_Dedx;
+  vector<MonoCandidate> CutFlowCand_looseF51;
+  vector<MonoCandidate> CutFlowCand_looseDedx;
   vector<MonoCandidate> Matched;
   //for cross talk
   vector<MonoCandidate> CutFlowCand_onlyDedx;
@@ -256,7 +262,9 @@ private:
   int Qual_count=0;
   int E_count=0;
   int f51_count=0;
+  int f51_loose_count=0;
   int dEdX_count=0; 
+  int dEdX_loose_count=0; 
   
   //for cross talk
   int dEdXOnly_count=0;
