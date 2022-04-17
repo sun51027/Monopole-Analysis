@@ -206,7 +206,7 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 			z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 
 			x.GetProfile(PileUp_f51)->Fill(Matched[i].NPV_,Matched[i].f51_);
-			x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].f51_);
+			x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].dEdXSig_);
 			if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 			if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
 			if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
@@ -224,7 +224,7 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 			z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 
 			x.GetProfile(PileUp_f51)->Fill(CutFlowCand[i].NPV_,CutFlowCand[i].f51_);
-			x.GetProfile(PileUp_DedXSig)->Fill(CutFlowCand[i].NPV_,CutFlowCand[i].f51_);
+			x.GetProfile(PileUp_DedXSig)->Fill(CutFlowCand[i].NPV_,CutFlowCand[i].dEdXSig_);
 			if(TMath::Abs(CutFlowCand[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 			if(TMath::Abs(CutFlowCand[i].eta_) > 1.479 && TMath::Abs(CutFlowCand[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
 			if(TMath::Abs(CutFlowCand[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
