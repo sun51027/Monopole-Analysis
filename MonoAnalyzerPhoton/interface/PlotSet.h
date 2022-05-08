@@ -18,7 +18,9 @@ enum PlotName{
   Spike,
   EcalBarrel,
   EcalEndCup,
-  EcalAll
+  EcalAll,
+  PileUp_DedXSig,
+  PileUp_f51
 };
 class PlotSet
 {

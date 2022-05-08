@@ -157,6 +157,11 @@ void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matchin
 		for(int i=0; i < Matched.size() ;i++){
 			z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
 			z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
+			z.GetPlot(XYPar0)->Fill(Matched[i].xyp0_);
+			z.GetPlot(XYPar1)->Fill(Matched[i].xyp1_);
+			z.GetPlot(XYPar2)->Fill(Matched[i].xyp2_);
+			z.GetPlot(RZPar0)->Fill(Matched[i].rzp0_);
+			z.GetPlot(RZPar1)->Fill(Matched[i].rzp1_);
 			z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
 			z.GetPlot(E55)->Fill(Matched[i].e55_);
 			z.GetPlot(F51)->Fill(Matched[i].f51_);
@@ -173,6 +178,11 @@ void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matchin
 		for(int i=0; i < Cand.size() ;i++){
 			z.GetPlot(FracSatVNstrips)->Fill(Cand[i].subHits_,Cand[i].subSatHits_/Cand[i].subHits_);
 			z.GetPlot(DedXSig)->Fill(Cand[i].dEdXSig_);
+			z.GetPlot(XYPar0)->Fill(Cand[i].xyp0_);
+			z.GetPlot(XYPar1)->Fill(Cand[i].xyp1_);
+			z.GetPlot(XYPar2)->Fill(Cand[i].xyp2_);
+			z.GetPlot(RZPar0)->Fill(Cand[i].rzp0_);
+			z.GetPlot(RZPar1)->Fill(Cand[i].rzp1_);
 			z.GetPlot(RZcurv)->Fill(Cand[i].rzp2_);
 			z.GetPlot(E55)->Fill(Cand[i].e55_);
 			z.GetPlot(F51)->Fill(Cand[i].f51_);
@@ -199,6 +209,11 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 		for(int i=0; i < Matched.size() ;i++){
 			z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
 			z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
+			z.GetPlot(XYPar0)->Fill(Matched[i].xyp1_);
+			z.GetPlot(XYPar1)->Fill(Matched[i].xyp0_);
+			z.GetPlot(XYPar2)->Fill(Matched[i].xyp2_);
+			z.GetPlot(RZPar0)->Fill(Matched[i].rzp0_);
+			z.GetPlot(RZPar1)->Fill(Matched[i].rzp1_);
 			z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
 			z.GetPlot(E55)->Fill(Matched[i].e55_);
 			z.GetPlot(F51)->Fill(Matched[i].f51_);
@@ -217,6 +232,11 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 		for(int i=0; i < CutFlowCand.size() ;i++){
 			z.GetPlot(FracSatVNstrips)->Fill(CutFlowCand[i].subHits_,CutFlowCand[i].subSatHits_/CutFlowCand[i].subHits_);
 			z.GetPlot(DedXSig)->Fill(CutFlowCand[i].dEdXSig_);
+			z.GetPlot(XYPar0)->Fill(CutFlowCand[i].xyp0_);
+			z.GetPlot(XYPar1)->Fill(CutFlowCand[i].xyp1_);
+			z.GetPlot(XYPar2)->Fill(CutFlowCand[i].xyp2_);
+			z.GetPlot(RZPar0)->Fill(CutFlowCand[i].rzp0_);
+			z.GetPlot(RZPar1)->Fill(CutFlowCand[i].rzp1_);
 			z.GetPlot(RZcurv)->Fill(CutFlowCand[i].rzp2_);
 			z.GetPlot(E55)->Fill(CutFlowCand[i].e55_);
 			z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);

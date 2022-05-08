@@ -16,14 +16,15 @@ public:
 	PlotSet &x = NoCutPlot[0];
         x.CreatPlot(FracSatVNstrips,new TH2D("FracSatVNstrips","",100,0,1000,100,0,1));
         x.CreatPlot(DedXSig,new TH1D("DedXSig","",100,0,30));
-        x.CreatPlot(XYPar0,new TH1D("XYPar0","",100,-1,1));
+        x.CreatPlot(XYPar0,new TH1D("XYPar0","",50,-1,1));
+        x.CreatPlot(XYPar1,new TH1D("XYPar1","",100,-10,10));
         x.CreatPlot(XYPar2,new TH1D("XYPar2","",100,-20000,20000));
         x.CreatPlot(RZPar0,new TH1D("RZPar0","",100,-20,20));
-        x.CreatPlot(RZPar1,new TH1D("RZPar1","",100,-1,100));
+        x.CreatPlot(RZPar1,new TH1D("RZPar1","",100,-15,15));
         x.CreatPlot(RZcurv,new TH1D("RZcurv","",100,-0.01,0.01));
 	x.CreatPlot(E55,new TH1D("E55","",100,-1,1200));
         x.CreatPlot(F51,new TH1D("F51","",100,0.2,1.1));
-        x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,30));
+        x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,10));
         x.CreatPlot(ABCD,new TH2D("ABCD","",100,0,1.1,100,0,30));
 
         NoCutProfile.resize(1U);
@@ -49,13 +50,14 @@ public:
 	   z.CreatPlot(FracSatVNstrips,new TH2D((cutn1name+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
 	   z.CreatPlot(DedXSig,new TH1D((cutn1name+"DedXSig").c_str(),"",100,0,30));
            z.CreatPlot(XYPar0,new TH1D((cutn1name+"XYPar0").c_str(),"",100,-1,1));
+           z.CreatPlot(XYPar1,new TH1D((cutn1name+"XYPar1").c_str(),"",100,-10,10));
            z.CreatPlot(XYPar2,new TH1D((cutn1name+"XYPar2").c_str(),"",100,-20000,20000));
            z.CreatPlot(RZPar0,new TH1D((cutn1name+"RZPar0").c_str(),"",100,-20,20));
-           z.CreatPlot(RZPar1,new TH1D((cutn1name+"RZPar1").c_str(),"",100,-1,100));
+           z.CreatPlot(RZPar1,new TH1D((cutn1name+"RZPar1").c_str(),"",100,-15,15));
 	   z.CreatPlot(RZcurv,new TH1D((cutn1name+"RZcurv").c_str(),"",100,-0.01,0.01));
            z.CreatPlot(E55,new TH1D((cutn1name+"E55").c_str(),"",100,-1,1200));
            z.CreatPlot(F51,new TH1D((cutn1name+"F51").c_str(),"",100,0.2,1.1));
-           z.CreatPlot(HcalIso,new TH1D((cutn1name+"HcalIso").c_str(),"",100,-1,30));
+           z.CreatPlot(HcalIso,new TH1D((cutn1name+"HcalIso").c_str(),"",100,-1,10));
            z.CreatPlot(ABCD,new TH2D((cutn1name+"ABCD").c_str(),"",100,0,1.1,100,0,30));
 	}
 
@@ -67,13 +69,14 @@ public:
            y.CreatPlot(FracSatVNstrips,new TH2D((cutflowName+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
            y.CreatPlot(DedXSig,new TH1D((cutflowName+"DedXSig").c_str(),"",100,0,30));
            y.CreatPlot(XYPar0,new TH1D((cutflowName+"XYPar0").c_str(),"",100,-1,1));
+           y.CreatPlot(XYPar1,new TH1D((cutflowName+"XYPar1").c_str(),"",100,-10,10));
            y.CreatPlot(XYPar2,new TH1D((cutflowName+"XYPar2").c_str(),"",100,-20000,20000));
            y.CreatPlot(RZPar0,new TH1D((cutflowName+"RZPar0").c_str(),"",100,-20,20));
-           y.CreatPlot(RZPar1,new TH1D((cutflowName+"RZPar1").c_str(),"",100,-1,100));
+           y.CreatPlot(RZPar1,new TH1D((cutflowName+"RZPar1").c_str(),"",100,-15,15));
            y.CreatPlot(RZcurv,new TH1D((cutflowName+"RZcurv").c_str(),"",100,-0.01,0.01));
            y.CreatPlot(E55,new TH1D((cutflowName+"E55").c_str(),"",100,-1,1200));
            y.CreatPlot(F51,new TH1D((cutflowName+"F51").c_str(),"",100,0.2,1.1));
-           y.CreatPlot(HcalIso,new TH1D((cutflowName+"HcalIso").c_str(),"",100,-1,30));
+           y.CreatPlot(HcalIso,new TH1D((cutflowName+"HcalIso").c_str(),"",100,-1,10));
            y.CreatPlot(ABCD,new TH2D((cutflowName+"ABCD").c_str(),"",100,0,1.1,100,0,30));
 
        	   PlotSet &w = Profile[c];
