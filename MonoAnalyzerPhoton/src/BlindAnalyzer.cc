@@ -20,11 +20,13 @@ using namespace std;
 	MonoCandidate &cands = cand[c];
 	bool PreselectionCut = evalPreselection(cands);
 	if(TRG && PreselectionCut ) Preselection.push_back(cands); 
+	if(TRG ) TriggerSelection.push_back(cands); 
 	
       }//for cand loop
     	
 	//cut flow events calculating
         sort(Preselection.begin(),Preselection.begin()+Preselection.size());
+        sort(TriggerSelection.begin(),TriggerSelection.begin()+TriggerSelection.size());
 	if(Preselection.size()>0) 
 	{
 		PlotSet &z = CutFlow[0];
@@ -40,43 +42,47 @@ using namespace std;
 		Qual_count++;
 		for(int i=0; i<Preselection.size();i++){
 		//--- dEdxSig with slice f51 ---//
-		  if(Preselection[i].f51_ >= 0.00 && Preselection[i].f51_ < 0.17)	     z.GetPlot(F51_slice1)->Fill(Preselection[i].dEdXSig_);
-		  if(Preselection[i].f51_ >= 0.17 && Preselection[i].f51_ < 0.34)	     z.GetPlot(F51_slice2)->Fill(Preselection[i].dEdXSig_);
- 		  if(Preselection[i].f51_ >= 0.34 && Preselection[i].f51_ < 0.51)            z.GetPlot(F51_slice3)->Fill(Preselection[i].dEdXSig_);
-		  if(Preselection[i].f51_ >= 0.51 && Preselection[i].f51_ < 0.68)	     z.GetPlot(F51_slice4)->Fill(Preselection[i].dEdXSig_);
-		  if(Preselection[i].f51_ >= 0.68 && Preselection[i].f51_ < 0.85)	     z.GetPlot(F51_slice5)->Fill(Preselection[i].dEdXSig_);
-		  if(Preselection[i].f51_ >= 0.85 && Preselection[i].f51_ < 1.02)	     z.GetPlot(F51_slice6)->Fill(Preselection[i].dEdXSig_);
-		//--- f51 with slice dEdxSig ---//
-		  if(Preselection[i].dEdXSig_ >= 0.0 && Preselection[i].dEdXSig_ < 1.5)	     z.GetPlot(dEdXSig_slice1)->Fill(Preselection[i].f51_);
-		  if(Preselection[i].dEdXSig_ >= 1.5 && Preselection[i].dEdXSig_ < 3.0)	     z.GetPlot(dEdXSig_slice2)->Fill(Preselection[i].f51_);
- 		  if(Preselection[i].dEdXSig_ >= 3.0 && Preselection[i].dEdXSig_ < 4.5)      z.GetPlot(dEdXSig_slice3)->Fill(Preselection[i].f51_);
-		  if(Preselection[i].dEdXSig_ >= 4.5 && Preselection[i].dEdXSig_ < 6.0)	     z.GetPlot(dEdXSig_slice4)->Fill(Preselection[i].f51_);
-		  if(Preselection[i].dEdXSig_ >= 6.0 && Preselection[i].dEdXSig_ < 7.5)	     z.GetPlot(dEdXSig_slice5)->Fill(Preselection[i].f51_);
-		  if(Preselection[i].dEdXSig_ >= 7.5 && Preselection[i].dEdXSig_ < 9.0)	     z.GetPlot(dEdXSig_slice6)->Fill(Preselection[i].f51_);
-		  if(Preselection[i].dEdXSig_ >= 9.0 && Preselection[i].dEdXSig_ < 10.5)     z.GetPlot(dEdXSig_slice7)->Fill(Preselection[i].f51_);
+//		  if(Preselection[i].f51_ >= 0.00 && Preselection[i].f51_ < 0.17)	     z.GetPlot(F51_slice1)->Fill(Preselection[i].dEdXSig_);
+//		  if(Preselection[i].f51_ >= 0.17 && Preselection[i].f51_ < 0.34)	     z.GetPlot(F51_slice2)->Fill(Preselection[i].dEdXSig_);
+// 		  if(Preselection[i].f51_ >= 0.34 && Preselection[i].f51_ < 0.51)            z.GetPlot(F51_slice3)->Fill(Preselection[i].dEdXSig_);
+//		  if(Preselection[i].f51_ >= 0.51 && Preselection[i].f51_ < 0.68)	     z.GetPlot(F51_slice4)->Fill(Preselection[i].dEdXSig_);
+//		  if(Preselection[i].f51_ >= 0.68 && Preselection[i].f51_ < 0.85)	     z.GetPlot(F51_slice5)->Fill(Preselection[i].dEdXSig_);
+//		  if(Preselection[i].f51_ >= 0.85 && Preselection[i].f51_ < 1.02)	     z.GetPlot(F51_slice6)->Fill(Preselection[i].dEdXSig_);
+//		//--- f51 with slice dEdxSig ---//
+//		  if(Preselection[i].dEdXSig_ >= 0.0 && Preselection[i].dEdXSig_ < 1.5)	     z.GetPlot(dEdXSig_slice1)->Fill(Preselection[i].f51_);
+//		  if(Preselection[i].dEdXSig_ >= 1.5 && Preselection[i].dEdXSig_ < 3.0)	     z.GetPlot(dEdXSig_slice2)->Fill(Preselection[i].f51_);
+// 		  if(Preselection[i].dEdXSig_ >= 3.0 && Preselection[i].dEdXSig_ < 4.5)      z.GetPlot(dEdXSig_slice3)->Fill(Preselection[i].f51_);
+//		  if(Preselection[i].dEdXSig_ >= 4.5 && Preselection[i].dEdXSig_ < 6.0)	     z.GetPlot(dEdXSig_slice4)->Fill(Preselection[i].f51_);
+//		  if(Preselection[i].dEdXSig_ >= 6.0 && Preselection[i].dEdXSig_ < 7.5)	     z.GetPlot(dEdXSig_slice5)->Fill(Preselection[i].f51_);
+//		  if(Preselection[i].dEdXSig_ >= 7.5 && Preselection[i].dEdXSig_ < 9.0)	     z.GetPlot(dEdXSig_slice6)->Fill(Preselection[i].f51_);
+//		  if(Preselection[i].dEdXSig_ >= 9.0 && Preselection[i].dEdXSig_ < 10.5)     z.GetPlot(dEdXSig_slice7)->Fill(Preselection[i].f51_);
 
 		//--- Profile with f51(x-axis) dEdxSig(y-axis) slice in eta or energy ----//
 		  if(TMath::Abs(Preselection[i].eta_) < 1.479)	x.GetProfile(EcalBarrel)->Fill(Preselection[i].f51_,Preselection[i].dEdXSig_);
 		  if(TMath::Abs(Preselection[i].eta_) > 1.479 && TMath::Abs(Preselection[i].eta_) < 3.0)	x.GetProfile(EcalEndCup)->Fill(Preselection[i].f51_,Preselection[i].dEdXSig_);
 		  if(TMath::Abs(Preselection[i].eta_) < 3.0)	x.GetProfile(EcalAll)->Fill(Preselection[i].f51_,Preselection[i].dEdXSig_);
 		} 
-		FillFlowHistogram(0,Preselection);
+	//	FillFlowHistogram(0,Preselection);
+		FillFlowHistogram(0,TriggerSelection);
 
 	}
 	
   }
   void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand){
 	PlotSet &z = CutFlow[n];
-//	for(int i=0; i < CutFlowCand.size() ;i++){
-	//Draw event
 	  z.GetPlot(FracSatVNstrips)->Fill(CutFlowCand[0].subHits_,CutFlowCand[0].subSatHits_/CutFlowCand[0].subHits_);
 	  z.GetPlot(DedXSig)->Fill(CutFlowCand[0].dEdXSig_);
+	  z.GetPlot(XYPar0)->Fill(CutFlowCand[0].xyp0_);
+	  z.GetPlot(XYPar1)->Fill(CutFlowCand[0].xyp1_);
+	  z.GetPlot(XYPar2)->Fill(CutFlowCand[0].xyp2_);
+	  z.GetPlot(RZPar0)->Fill(CutFlowCand[0].rzp0_);
+	  z.GetPlot(RZPar1)->Fill(CutFlowCand[0].rzp1_);
+	  z.GetPlot(RZcurv)->Fill(CutFlowCand[0].rzp2_);
 	  z.GetPlot(F51)->Fill(CutFlowCand[0].f51_);
           z.GetPlot(ABCD)->Fill(CutFlowCand[0].f51_,CutFlowCand[0].dEdXSig_);
-//	}
   }
   void MonoCuts::Clear(){
-
+	TriggerSelection.clear();
 	Preselection.clear();
   }
 
@@ -101,7 +107,7 @@ using namespace std;
 
 void BlindAnalyzer()
 {
-	TFile *oFile = new TFile("output/BlindAnalysis.root","recreate");
+	TFile *oFile = new TFile("output/MonoData2018_Plot.root","recreate");
 	TChain *Tree = new TChain("monopoles");
 	Tree->Add("../../Data/Blind/BlindedData_2018AB.root");
 	Tree->Add("../../Data/Blind/BlindedData_2018C.root");
