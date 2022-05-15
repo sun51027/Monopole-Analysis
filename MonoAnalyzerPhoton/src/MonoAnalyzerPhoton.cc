@@ -153,25 +153,28 @@ void MonoCuts::FillNoCutHistogram(int n,vector<MonoCandidate> Cand, bool matchin
 	PlotSet &x = NoCutProfile[n];
 	vector<MonoCandidate> Matched;
 	if (matching == 1){
-		Matched = Matching(Cand);	
-		for(int i=0; i < Matched.size() ;i++){
-			z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
-			z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
-			z.GetPlot(XYPar0)->Fill(Matched[i].xyp0_);
-			z.GetPlot(XYPar1)->Fill(Matched[i].xyp1_);
-			z.GetPlot(XYPar2)->Fill(Matched[i].xyp2_);
-			z.GetPlot(RZPar0)->Fill(Matched[i].rzp0_);
-			z.GetPlot(RZPar1)->Fill(Matched[i].rzp1_);
-			z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
-			z.GetPlot(E55)->Fill(Matched[i].e55_);
-			z.GetPlot(F51)->Fill(Matched[i].f51_);
-			z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
-			z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
-			x.GetProfile(PileUp_f51)->Fill(Matched[i].NPV_,Matched[i].f51_);
-			x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].f51_);
-			if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
-			if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
-			if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		Matched = Matching(Cand);
+		if(Matched.size() != 0){	
+			z.GetPlot(FracSatVNstrips)->Fill(Matched[0].subHits_,Matched[0].subSatHits_/Matched[0].subHits_);
+			z.GetPlot(DedXSig)->Fill(Matched[0].dEdXSig_);
+			z.GetPlot(XYPar0)->Fill(Matched[0].xyp0_);
+			z.GetPlot(XYPar1)->Fill(Matched[0].xyp1_);
+			z.GetPlot(XYPar2)->Fill(Matched[0].xyp2_);
+			z.GetPlot(RZPar0)->Fill(Matched[0].rzp0_);
+			z.GetPlot(RZPar1)->Fill(Matched[0].rzp1_);
+			z.GetPlot(RZcurv)->Fill(Matched[0].rzp2_);
+			z.GetPlot(E55)->Fill(Matched[0].e55_);
+			z.GetPlot(F51)->Fill(Matched[0].f51_);
+			z.GetPlot(HcalIso)->Fill(Matched[0].hIso_);
+			z.GetPlot(ABCD)->Fill(Matched[0].f51_,Matched[0].dEdXSig_);
+
+			for(int i=0; i < Matched.size() ;i++){
+				x.GetProfile(PileUp_f51)->Fill(Matched[i].NPV_,Matched[i].f51_);
+				x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].f51_);
+				if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+				if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+				if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+			}
 		}
 	}
 	else{
@@ -206,26 +209,28 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 	vector<MonoCandidate> Matched;
 	if (matching == 1){
 		Matched = Matching(CutFlowCand);	
-		for(int i=0; i < Matched.size() ;i++){
-			z.GetPlot(FracSatVNstrips)->Fill(Matched[i].subHits_,Matched[i].subSatHits_/Matched[i].subHits_);
-			z.GetPlot(DedXSig)->Fill(Matched[i].dEdXSig_);
-			z.GetPlot(XYPar0)->Fill(Matched[i].xyp1_);
-			z.GetPlot(XYPar1)->Fill(Matched[i].xyp0_);
-			z.GetPlot(XYPar2)->Fill(Matched[i].xyp2_);
-			z.GetPlot(RZPar0)->Fill(Matched[i].rzp0_);
-			z.GetPlot(RZPar1)->Fill(Matched[i].rzp1_);
-			z.GetPlot(RZcurv)->Fill(Matched[i].rzp2_);
-			z.GetPlot(E55)->Fill(Matched[i].e55_);
-			z.GetPlot(F51)->Fill(Matched[i].f51_);
-			z.GetPlot(HcalIso)->Fill(Matched[i].hIso_);
-			z.GetPlot(ABCD)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+		if(Matched.size() != 0){	
+			z.GetPlot(FracSatVNstrips)->Fill(Matched[0].subHits_,Matched[0].subSatHits_/Matched[0].subHits_);
+			z.GetPlot(DedXSig)->Fill(Matched[0].dEdXSig_);
+			z.GetPlot(XYPar0)->Fill(Matched[0].xyp1_);
+			z.GetPlot(XYPar1)->Fill(Matched[0].xyp0_);
+			z.GetPlot(XYPar2)->Fill(Matched[0].xyp2_);
+			z.GetPlot(RZPar0)->Fill(Matched[0].rzp0_);
+			z.GetPlot(RZPar1)->Fill(Matched[0].rzp1_);
+			z.GetPlot(RZcurv)->Fill(Matched[0].rzp2_);
+			z.GetPlot(E55)->Fill(Matched[0].e55_);
+			z.GetPlot(F51)->Fill(Matched[0].f51_);
+			z.GetPlot(HcalIso)->Fill(Matched[0].hIso_);
+			z.GetPlot(ABCD)->Fill(Matched[0].f51_,Matched[0].dEdXSig_);
 
-			x.GetProfile(PileUp_f51)->Fill(Matched[i].NPV_,Matched[i].f51_);
-			x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].dEdXSig_);
-			if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
-			if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
-			if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
-
+			for(int i=0; i < Matched.size() ;i++){
+				x.GetProfile(PileUp_f51)->Fill(Matched[i].NPV_,Matched[i].f51_);
+				x.GetProfile(PileUp_DedXSig)->Fill(Matched[i].NPV_,Matched[i].dEdXSig_);
+				if(TMath::Abs(Matched[i].eta_) < 1.479)	  x.GetProfile(EcalBarrel)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+				if(TMath::Abs(Matched[i].eta_) > 1.479 && TMath::Abs(Matched[i].eta_) < 3.0) 	  x.GetProfile(EcalEndCup)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+				if(TMath::Abs(Matched[i].eta_) < 3.0 ) x.GetProfile(EcalAll)->Fill(Matched[i].f51_,Matched[i].dEdXSig_);
+	
+			}
 		}
 	}
 	else{
@@ -241,7 +246,7 @@ void MonoCuts::FillFlowHistogram(int n, vector<MonoCandidate> CutFlowCand, bool 
 			z.GetPlot(E55)->Fill(CutFlowCand[i].e55_);
 			z.GetPlot(F51)->Fill(CutFlowCand[i].f51_);
 			z.GetPlot(HcalIso)->Fill(CutFlowCand[i].hIso_);
-			z.GetPlot(ABCD)->Fill(CutFlowCand[i].f51_,CutFlowCand[i].dEdXSig_);
+			z.GetPlot(ABCD)->Fill(CutFlowCand[0].f51_,CutFlowCand[0].dEdXSig_);
 
 			x.GetProfile(PileUp_f51)->Fill(CutFlowCand[i].NPV_,CutFlowCand[i].f51_);
 			x.GetProfile(PileUp_DedXSig)->Fill(CutFlowCand[i].NPV_,CutFlowCand[i].dEdXSig_);

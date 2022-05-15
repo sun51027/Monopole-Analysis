@@ -164,6 +164,7 @@ public:
         fout<<"     F51Cut, "<<f51_count<<endl;
         fout<<" dEdXSigCut, "<<dEdX_count<<endl;
         fout<<"Signal efficiency, "<<(double)dEdX_count/(double)TotalEvents<<endl;
+	fout<<"	# of reco, "<<Reco<<endl;
         fout<<endl;
 	fout<<",N1Cuts,Relative eff"<<endl;
         fout<<"     No TRG, "<<NoTRG <<","<<(double)dEdX_count/(double)NoTRG<<endl;
