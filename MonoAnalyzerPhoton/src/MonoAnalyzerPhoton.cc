@@ -381,23 +381,29 @@ void MonoAnalyzerPhoton(string year, string mass,bool matching_option, int sys_o
 		matching = "1";
 	}
 
+	TChain *tree = new TChain("monopoles");
 	string sys;
 	if(sys_option == 0){
 		sys = "";
+	tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/"+mass+"/*.root").c_str());
 	}
 	else if(sys_option == 1){
-		sys = "DeltaRayOff"
+		sys = "DeltaRayOff";
+		cout<<"Processing for the DeltaRayOff...."<<endl;
+		tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DeltaRayOff/"+year+"/"+mass+"/*.root").c_str());
 	}
 	else if(sys_option == 2){
-		sys = "SpikeAlgo"
+		sys = "SpikeAlgo";
+		cout<<"Processing for the Ecal...."<<endl;
+		tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/ECal/"+year+"/"+mass+"/*.root").c_str());
 	}
 	else if(sys_option == 3){
-		sys = "CrossTalk"
+		sys = "CrossTalk";
+		cout<<"Processing for the CrossTalk...."<<endl;
+		tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/Systematic/DedxCrossTalk/"+year+"/"+mass+"/*.root").c_str());
 	}
 
 	TFile *oFile = new TFile(("output/MonoPhotonAnalysis_"+year+"_"+mass+"_"+sys+"_"+matching+".root").c_str(),"recreate");
-	TChain *tree = new TChain("monopoles");
-	tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/"+mass+"/*.root").c_str());
 	Bool_t passHLT_Photon200;
 	Bool_t passHLT_Photon175;
 	Bool_t passHLT_DoublePhoton70;
@@ -543,15 +549,15 @@ void MonoAnalyzerPhoton(string year, string mass,bool matching_option, int sys_o
 
 	noTrgAnalysis.WritePlots(oFile);
 	noTrgAnalysis.SignalEff("NOTRG",NEvents);
-	noTrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_"+matching+".csv").c_str(),NEvents,mass,"NoTrg");
+	noTrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_"+sys+"_"+matching+".csv").c_str(),NEvents,mass,"NoTrg");
 	TrgAnalysis.WritePlots(oFile);
 	if(year == "2016" || year == "2016APV"){
 		TrgAnalysis.SignalEff("HLT_Photon175",NEvents);
-		TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT_"+matching+".csv").c_str(),NEvents,mass,"Photon175");
+		TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT_"+sys+"_"+matching+".csv").c_str(),NEvents,mass,"Photon175");
 	}
 	else{
 		TrgAnalysis.SignalEff("HLT_Photon200",NEvents);
-		TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT_"+matching+".csv").c_str(),NEvents,mass,"Photon200");
+		TrgAnalysis.SaveAs_csv(("output/csv_file/Signaleff_"+year+"_"+mass+"_HLT_"+sys+"_"+matching+".csv").c_str(),NEvents,mass,"Photon200");
 	}
 	oFile->Close();	
 }
