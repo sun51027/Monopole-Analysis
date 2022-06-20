@@ -371,7 +371,7 @@ const double MonoCuts::photonCut_ = 200;
 const double MonoCuts::dEdXSig_looseCut_ = 7;
 const double MonoCuts::f51_looseCut_= 0.75 ;
 
-void MonoAnalyzerPhoton(string year, string mass,bool matching_option)
+void MonoAnalyzerPhoton(string year, string mass,bool matching_option, int sys_option=0)
 {
 	string matching;
 	if(matching_option == 0){
@@ -380,7 +380,22 @@ void MonoAnalyzerPhoton(string year, string mass,bool matching_option)
 	else{
 		matching = "1";
 	}
-	TFile *oFile = new TFile(("output/MonoPhotonAnalysis_"+year+"_"+mass+"_"+matching+".root").c_str(),"recreate");
+
+	string sys;
+	if(sys_option == 0){
+		sys = "";
+	}
+	else if(sys_option == 1){
+		sys = "DeltaRayOff"
+	}
+	else if(sys_option == 2){
+		sys = "SpikeAlgo"
+	}
+	else if(sys_option == 3){
+		sys = "CrossTalk"
+	}
+
+	TFile *oFile = new TFile(("output/MonoPhotonAnalysis_"+year+"_"+mass+"_"+sys+"_"+matching+".root").c_str(),"recreate");
 	TChain *tree = new TChain("monopoles");
 	tree->Add(("/wk_cms2/shihlin0314/CMSSW_8_0_29/src/MCNtuple"+year+"/"+mass+"/*.root").c_str());
 	Bool_t passHLT_Photon200;
