@@ -97,11 +97,9 @@ void doAnalysis(TChain *Mono,TH2F *Plot,string year){
 
 	}
 
-//	if(Event == LastEvent ) sameEvent++;
 	if((int)Event!=LastEvent && Point.size()>0){
 	//1. Only see different events to do the ABCD method
 	   sort(Point.begin(),Point.end());
-
 	   for(int i=Point.size()-1;i>=0;i--){
 		Plot->Fill(Point[i].second,Point[i].first);
 		//2nd->f51 for x-axis, 1st->dedx for y-axis)
@@ -289,6 +287,6 @@ void MakeBlindPlot(int Unblind, string year){
     l1->SetLineStyle(2); l2->SetLineStyle(2); l3->SetLineStyle(2); l4->SetLineStyle(2);
     l1->Draw(); l2->Draw(); l3->Draw(); l4->Draw();
 
-    c->SaveAs("ABCD_plot.pdf"); 
+    c->SaveAs(("ABCD_plot"+year+".pdf").c_str()); 
 
 }	
