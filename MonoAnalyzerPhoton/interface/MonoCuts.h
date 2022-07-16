@@ -7,7 +7,6 @@ public:
   MonoCuts(){}
 
   MonoCuts(const string &trName,TFile *openFile):trigName_(trName){
-	//Init();	
 	//create a new directory in the output file
 	openFile->mkdir(trName.c_str());
 
@@ -27,14 +26,14 @@ public:
         x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,10));
         x.CreatPlot(ABCD,new TH2D("ABCD","",100,0,1.1,100,0,30));
 
-        NoCutProfile.resize(1U);
-        PlotSet &p = NoCutProfile[0];
-        p.CreatProfile(EcalBarrel,new TProfile("EcalBarrel","",30,0,1.1,0,30));
-        p.CreatProfile(EcalEndCup,new TProfile("EcalEndCup","",30,0,1.1,0,30));
-        p.CreatProfile(EcalAll ,new TProfile("EcalAll","",30,0,1.1,0,30));
-        p.CreatProfile(PileUp_DedXSig ,new TProfile("PileUp_DedXSig","",6,0,60,-1,30));
-        p.CreatProfile(PileUp_f51 ,new TProfile("PileUp_f51","",6,0,60,-0.1,1));
-
+//        NoCutProfile.resize(1U);
+//        PlotSet &p = NoCutProfile[0];
+//        p.CreatProfile(EcalBarrel,new TProfile("EcalBarrel","",30,0,1.1,0,30));
+//        p.CreatProfile(EcalEndCup,new TProfile("EcalEndCup","",30,0,1.1,0,30));
+//        p.CreatProfile(EcalAll ,new TProfile("EcalAll","",30,0,1.1,0,30));
+//        p.CreatProfile(PileUp_DedXSig ,new TProfile("PileUp_DedXSig","",6,0,60,-1,30));
+//        p.CreatProfile(PileUp_f51 ,new TProfile("PileUp_f51","",6,0,60,-0.1,1));
+//
  	cutName_[0] = "Quality_";
  	cutName_[1] = "Energy_";
 	cutName_[2] = "F51_";
@@ -45,15 +44,15 @@ public:
 
 	for( int c = 0; c <nCut ;c++){
 
-	   string cutn1name = "N1_"+ cutName_[c];	//N_1_HLT_Quality_FracSatVNstrips
-	   PlotSet &z = n_1Plot[c];//[1] = Quality,[2]energy, [3] f51, [4]dEdx
+	   string cutn1name = "N1_"+ cutName_[c];
+	   PlotSet &z = n_1Plot[c];
 	   z.CreatPlot(FracSatVNstrips,new TH2D((cutn1name+"FracSatVNstrips").c_str(),"",100,0,1000,100,0,1));
 	   z.CreatPlot(DedXSig,new TH1D((cutn1name+"DedXSig").c_str(),"",100,0,30));
-           z.CreatPlot(XYPar0,new TH1D((cutn1name+"XYPar0").c_str(),"",100,-1,1));
-           z.CreatPlot(XYPar1,new TH1D((cutn1name+"XYPar1").c_str(),"",100,-10,10));
-           z.CreatPlot(XYPar2,new TH1D((cutn1name+"XYPar2").c_str(),"",100,-20000,20000));
-           z.CreatPlot(RZPar0,new TH1D((cutn1name+"RZPar0").c_str(),"",100,-20,20));
-           z.CreatPlot(RZPar1,new TH1D((cutn1name+"RZPar1").c_str(),"",100,-15,15));
+//           z.CreatPlot(XYPar0,new TH1D((cutn1name+"XYPar0").c_str(),"",100,-1,1));
+//           z.CreatPlot(XYPar1,new TH1D((cutn1name+"XYPar1").c_str(),"",100,-10,10));
+//           z.CreatPlot(XYPar2,new TH1D((cutn1name+"XYPar2").c_str(),"",100,-20000,20000));
+//           z.CreatPlot(RZPar0,new TH1D((cutn1name+"RZPar0").c_str(),"",100,-20,20));
+//           z.CreatPlot(RZPar1,new TH1D((cutn1name+"RZPar1").c_str(),"",100,-15,15));
 	   z.CreatPlot(RZcurv,new TH1D((cutn1name+"RZcurv").c_str(),"",100,-0.01,0.01));
            z.CreatPlot(E55,new TH1D((cutn1name+"E55").c_str(),"",100,-1,1200));
            z.CreatPlot(F51,new TH1D((cutn1name+"F51").c_str(),"",100,0.2,1.1));
@@ -88,9 +87,8 @@ public:
 
 	}
   }
-  ~MonoCuts(){
+  ~MonoCuts(){}
 
-	}
   void doAnalysis(vector<MonoCandidate> &cand, vector<Photon> & pho, unsigned nCandidates,unsigned nPhoton, bool TRG, unsigned ev,bool matching_option,string year);
   void doAnalysis_data(vector<MonoCandidate> &cand,unsigned nParticle,bool passHLT_Photon200,unsigned ev);
   void FillNoCutHistogram(int n,vector<MonoCandidate> Cand,bool matching);
@@ -164,7 +162,6 @@ public:
         fout<<"     F51Cut, "<<f51_count<<endl;
         fout<<" dEdXSigCut, "<<dEdX_count<<endl;
         fout<<"Signal efficiency, "<<(double)dEdX_count/(double)TotalEvents<<endl;
-	fout<<"	# of reco, "<<Reco<<endl;
         fout<<endl;
 	fout<<",N1Cuts,Relative eff"<<endl;
         fout<<"     No TRG, "<<NoTRG <<","<<(double)dEdX_count/(double)NoTRG<<endl;
@@ -204,11 +201,14 @@ public:
 	
 private:
   string trigName_;
+
   // No Cut plot
   vector<PlotSet> NoCutPlot;
   vector<PlotSet> NoCutProfile;
+
   //N-1 cut plot box
   vector<PlotSet> n_1Plot;
+
   //cutflow plot box
   vector<PlotSet> CutFlow;
   vector<PlotSet> Profile;
@@ -226,12 +226,11 @@ private:
   bool evalF51(MonoCandidate &mc) { return mc.f51_ > f51Cut_ ; }
   bool evaldEdX(MonoCandidate &mc) { return mc.dEdXSig_ > dEdXSigCut_ ;}
   bool evalPhoton(Photon &mc){ return mc.pho_pt_ > photonCut_; }
-  //---preselection for data
+ 
   bool evalPreselection(MonoCandidate &mc) { return TMath::Abs(mc.xyp0_) < xyp0Cut_ && TMath::Abs(mc.xyp2_) > xyp2Cut_ 
 			&& mc.dist_ < distCut_  && mc.hIso_ <hIsoCut_  
 			&& TMath::Abs( mc.rzp2_) < rzp2Cut_ && TMath::Abs(mc.rzp1_) < rzp1Cut_ && TMath::Abs(mc.rzp0_) < rzp0Cut_
 			&& mc.e55_ > e55Cut_ && mc.dEdXSig_ > dEdXSigCut_;  }
- 
   bool evalF51loose(MonoCandidate &mc) { return mc.f51_ > f51_looseCut_ ; }
   bool evaldEdXloose(MonoCandidate &mc) { return mc.dEdXSig_ > dEdXSig_looseCut_ ;}
 
@@ -243,11 +242,11 @@ private:
   vector<MonoCandidate> CutFlowCand_looseF51;
   vector<MonoCandidate> CutFlowCand_looseDedx;
   vector<MonoCandidate> Matched;
+
   //for cross talk
   vector<MonoCandidate> CutFlowCand_onlyDedx;
   vector<MonoCandidate> CutFlowCand_QualDedx;
-  //for data
-  vector<MonoCandidate> Preselection;
+
 
   vector<MonoCandidate> N1CutCand_TRG;
   vector<MonoCandidate> N1CutCand_Qual;
@@ -256,37 +255,35 @@ private:
   vector<MonoCandidate> N1CutCand_Dedx;
 	
   vector<Photon> HighPtPhoton;
+
   //no. of every selections 
   int Qual=0;
   int E=0;
   int f51=0;
   int dEdX=0;
+
   //count for cutflow 
   int count=0;
   int Qual_count=0;
   int E_count=0;
   int f51_count=0;
-  int f51_loose_count=0;
   int dEdX_count=0; 
   int dEdX_loose_count=0; 
+  int f51_loose_count=0;
   
-  //for cross talk
-  int dEdXOnly_count=0;
-  int QualdEdX_count=0;
-
-  int SpikeLike=0;
-  int EBarrel=0; 
-  int Reco=0;
-  int photonLike=0;
   //relative eff without HLT
   int NoTRG=0;
   int NoQual=0;
   int NoE=0;
   int NoF51=0;
   int NodEdXCut=0;
+  //for cross talk
+  int dEdXOnly_count=0;
+  int QualdEdX_count=0;
 
-  int MatchedEvent=0;
-  bool Flag=0;
+  // for trigger study
+  int photonLike=0;
+
 };
 
 #endif

@@ -43,7 +43,7 @@ public:
         x.CreatPlot(HcalIso,new TH1D("HcalIso","",100,-1,10));
         x.CreatPlot(XYPar0,new TH1D("XYPar0","",100,-3,3));
         x.CreatPlot(XYPar1,new TH1D("XYPar1","",100,-10,10));
-        x.CreatPlot(XYPar2,new TH1D("XYPar2","",100,-2000,2000));
+        x.CreatPlot(XYPar2,new TH1D("XYPar2","",100,-20000,20000));
         x.CreatPlot(RZPar0,new TH1D("RZPar0","",100,-20,20));
         x.CreatPlot(RZPar1,new TH1D("RZPar1","",100,-20,20));
         x.CreatPlot(RZcurv,new TH1D("RZcurv","",100,-0.01,0.01));

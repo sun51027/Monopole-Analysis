@@ -19,15 +19,19 @@ public:
 	// nCut-1 is for ignoring HLT_ ,omit extra plots	
 	CutFlow.resize(100);
 	PlotSet &y = CutFlow[0];
-	string cutflowName = "Blinded_";
+	string cutflowName = "";
 
-        //y.CreatPlot(FracSatVNstrips,new TH2D((cutflowName+"FracSatVNstrips").c_str(),"",30,0,1000,100,0,1));
-        //y.CreatPlot(XYPar0,new TH1D((cutflowName+"XYPar0").c_str(),"",100,-1,1));
-        //y.CreatPlot(XYPar2,new TH1D((cutflowName+"XYPar2").c_str(),"",100,-20000,20000));
-        //y.CreatPlot(RZPar0,new TH1D((cutflowName+"RZPar0").c_str(),"",100,-20,20));
-        //y.CreatPlot(RZPar1,new TH1D((cutflowName+"RZPar1").c_str(),"",100,-1,100));
-        //y.CreatPlot(RZcurv,new TH1D((cutflowName+"RZcurv").c_str(),"",100,-0.01,0.01));
-        //y.CreatPlot(E55,new TH1D((cutflowName+"E55").c_str(),"",100,-1,1200));
+        y.CreatPlot(FracSatVNstrips,new TH2D((cutflowName+"FracSatVNstrips").c_str(),"",30,0,1000,100,0,1));
+	y.CreatPlot(DedXSig,new TH1D((cutflowName+"DedXSig").c_str(),"",100,0,30));
+        y.CreatPlot(XYPar0,new TH1D((cutflowName+"XYPar0").c_str(),"",100,-1,1));
+        y.CreatPlot(XYPar1,new TH1D((cutflowName+"XYPar1").c_str(),"",100,-10,10));
+        y.CreatPlot(XYPar2,new TH1D((cutflowName+"XYPar2").c_str(),"",100,-20000,20000));
+        y.CreatPlot(RZPar0,new TH1D((cutflowName+"RZPar0").c_str(),"",100,-20,20));
+        y.CreatPlot(RZPar1,new TH1D((cutflowName+"RZPar1").c_str(),"",100,-15,15));
+        y.CreatPlot(RZcurv,new TH1D((cutflowName+"RZcurv").c_str(),"",100,-0.01,0.01));
+        y.CreatPlot(E55,new TH1D((cutflowName+"E55").c_str(),"",100,-1,1200));
+	y.CreatPlot(F51,new TH1D((cutflowName+"F51").c_str(),"",100,0.2,1.1));
+        y.CreatPlot(HcalIso,new TH1D((cutflowName+"HcalIso").c_str(),"",100,-1,10));
         y.CreatPlot(ABCD,new TH2D((cutflowName+"ABCD").c_str(),"",105,0,1.05,60,0,30));
 
         //y.CreatPlot(DedXSig,new TH1D((cutflowName+"DedXSig").c_str(),"",30,0,30));
@@ -49,11 +53,11 @@ public:
         //y.CreatPlot(dEdXSig_slice6,new TH1D((cutflowName+"DedXSig_slice6").c_str(),"",30,0,1.1));
         //y.CreatPlot(dEdXSig_slice7,new TH1D((cutflowName+"DedXSig_slice7").c_str(),"",30,0,1.1));
 
-	//Profile.resize(5);	
-	//PlotSet &x = Profile[0];
-	//x.CreatProfile(EcalBarrel ,new TProfile((cutflowName+"EcalBarrel").c_str(),"",30,0,1.1));
-	//x.CreatProfile(EcalEndCup ,new TProfile((cutflowName+"EcalEndCup").c_str(),"",30,0,1.1));
-	//x.CreatProfile(EcalAll ,new TProfile((cutflowName+"EcalAll").c_str(),"",30,0,1.1));
+	Profile.resize(5);	
+	PlotSet &x = Profile[0];
+	x.CreatProfile(EcalBarrel ,new TProfile((cutflowName+"EcalBarrel").c_str(),"",30,0,1.1));
+	x.CreatProfile(EcalEndCup ,new TProfile((cutflowName+"EcalEndCup").c_str(),"",30,0,1.1));
+	x.CreatProfile(EcalAll ,new TProfile((cutflowName+"EcalAll").c_str(),"",30,0,1.1));
 	//cout<<"end of create plots"<<endl;
   }
 
@@ -177,6 +181,7 @@ private:
   vector<MonoCandidate> CutFlowCand_Dedx;
   //for data
   vector<MonoCandidate> Preselection;
+  vector<MonoCandidate> TriggerSelection;
   vector<MonoCandidate> selectedCand;
   vector<MonoCandidate> otherCand;
   vector<MonoCandidate> Region1;
