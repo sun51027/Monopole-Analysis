@@ -16,9 +16,9 @@ This source file only analyze the signal MC. The input file are in Phat eos spac
 
 `/eos/cms/store/group/offcomp_upgrade-sw/srimanob/monopole/13TeV/Legacy-RECO-v2/`
 
-**note that you must change the path of inputFile in the code (line)[https://github.com/sun51027/Monopole-Analysis/blob/main/MonoAnalyzerPhoton/src/MonoAnalyzerPhoton.cc#L393]*
+**note that you must change the path of inputFile in the code [line](https://github.com/sun51027/Monopole-Analysis/blob/main/MonoAnalyzerPhoton/src/MonoAnalyzerPhoton.cc#L393)**
 
-### how to run
+### How to run
 
 We use macro (root) to compile/run the analysis. 
 
@@ -34,7 +34,7 @@ year = 2018, 2017, 2016, 2016APV
 
 mass = 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500
 
-+ output file:
+### output file:
 
 There are two output files: 
 
@@ -42,7 +42,11 @@ There are two output files:
 
 2. MonoPhotonAnalysis_*.root : all cutflow plots and N-1 plots written in ROOT file.
 
+### other 
 
+Don't care about the "warning" message.
+
+Contact Lin if you have any questions: lshih@cern.ch
 
 
 
