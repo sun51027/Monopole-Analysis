@@ -18,6 +18,12 @@ This source file only analyze the signal MC. The input file are in Phat eos spac
 
 **note that you must change the path of inputFile in the code [line](https://github.com/sun51027/Monopole-Analysis/blob/main/MonoAnalyzerPhoton/src/MonoAnalyzerPhoton.cc#L393)**
 
+before you run, create two directories:
+
+`mkdir output
+ cd output
+ mkdir csv_file` 
+
 ### How to run
 
 We use macro (root) to compile/run the analysis. 
