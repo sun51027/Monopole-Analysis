@@ -25,7 +25,7 @@ enum PlotName{
 	pfPhotonLikePt,
 	pfUnknownLikePt,
 	
-	
+	PFMETvsOneCandOnePF,	
 	PFMETvsOneCandOne1ChargedHadron,
 	PFMETvsOneCandOne2Electron,
 	PFMETvsOneCandOne3Muon,
@@ -34,6 +34,7 @@ enum PlotName{
 	PFMETvsOneCandOne6HadronicEnergyinHF,
 	PFMETvsOneCandOne7EMEnergyinHF,
 	
+	PFMETvsTwoPF,
 	PFMETvsTwo1ChargedHadron,
 	PFMETvsTwo2Electron,
 	PFMETvsTwo3Muon,
@@ -41,7 +42,8 @@ enum PlotName{
 	PFMETvsTwo5NeutralHadron,
 	PFMETvsTwo6HadronicEnergyinHF,
 	PFMETvsTwo7EMEnergyinHF,
-
+	
+	PFMETvsOnlyOnePF,
 	PFMETvsOnlyOne1ChargedHadron,
 	PFMETvsOnlyOne2Electron,
 	PFMETvsOnlyOne3Muon,
@@ -249,39 +251,42 @@ public:
  	
 	//This is monopole candidate pass preselection, dEdxSig, f51, e55
 
-	x.CreatPlot(PFMETvsMonopoleCand,new TH1D("PFvsMonopoleCand","",30,0,1100));
-//	x.CreatPlot(ParticleflowlikePt,new TH1D("ParticleflowlikePt","",30,0,800));
-//	x.CreatPlot(ParticleflowlikeEta,new TH1D("ParticleflowlikeEta","",30,-4,4));
-//	x.CreatPlot(pfElectronLikePt,new TH1D("pfElectronLikePt","",30,0,800));
-//	x.CreatPlot(pfPhotonLikePt,new TH1D("pfPhotonLikePt","",30,0,800));
-//	x.CreatPlot(pfUnknownLikePt,new TH1D("pfUnknownLikePt","",30,0,800));
+	x.CreatPlot(PFMETvsMonopoleCand,new TH1D("PFvsMonopoleCand","",90,0,1100));
+//	x.CreatPlot(ParticleflowlikePt,new TH1D("ParticleflowlikePt","",90,0,800));
+//	x.CreatPlot(ParticleflowlikeEta,new TH1D("ParticleflowlikeEta","",90,-4,4));
+//	x.CreatPlot(pfElectronLikePt,new TH1D("pfElectronLikePt","",90,0,800));
+//	x.CreatPlot(pfPhotonLikePt,new TH1D("pfPhotonLikePt","",90,0,800));
+//	x.CreatPlot(pfUnknownLikePt,new TH1D("pfUnknownLikePt","",90,0,800));
 		
-        x.CreatPlot(PFMETvsOnlyOne1ChargedHadron,	new TH1D("PFMETvsOnlyOne1ChargedHadron","",30,0,1100));	
-        x.CreatPlot(PFMETvsOnlyOne2Electron,     	new TH1D("PFMETvsOnlyOne2Electron,","",30,0,1100));		
-        x.CreatPlot(PFMETvsOnlyOne3Muon,        	new TH1D("PFMETvsOnlyOne3Muon","",30,0,1100));		
-        x.CreatPlot(PFMETvsOnlyOne4Photon,       	new TH1D("PFMETvsOnlyOne4Photon","",30,0,1100));		
-        x.CreatPlot(PFMETvsOnlyOne5NeutralHadron,	new TH1D("PFMETvsOnlyOne5NeutralHadron","",30,0,1100));	
-        x.CreatPlot(PFMETvsOnlyOne6HadronicEnergyinHF,  new TH1D("PFMETvsOnlyOne6HadronicEnergyinHF","",30,0,1100));	
-        x.CreatPlot(PFMETvsOnlyOne7EMEnergyinHF,	new TH1D("PFMETvsOnlyOne7EMEnergyinHF","",30,0,1100));	
+        x.CreatPlot(PFMETvsOnlyOnePF,			new TH1D("PFMETvsOnlyOnePF","",90,0,1100));	
+        x.CreatPlot(PFMETvsOnlyOne1ChargedHadron,	new TH1D("PFMETvsOnlyOne1ChargedHadron","",90,0,1100));	
+        x.CreatPlot(PFMETvsOnlyOne2Electron,     	new TH1D("PFMETvsOnlyOne2Electron,","",90,0,1100));		
+        x.CreatPlot(PFMETvsOnlyOne3Muon,        	new TH1D("PFMETvsOnlyOne3Muon","",90,0,1100));		
+        x.CreatPlot(PFMETvsOnlyOne4Photon,       	new TH1D("PFMETvsOnlyOne4Photon","",90,0,1100));		
+        x.CreatPlot(PFMETvsOnlyOne5NeutralHadron,	new TH1D("PFMETvsOnlyOne5NeutralHadron","",90,0,1100));	
+        x.CreatPlot(PFMETvsOnlyOne6HadronicEnergyinHF,  new TH1D("PFMETvsOnlyOne6HadronicEnergyinHF","",90,0,1100));	
+        x.CreatPlot(PFMETvsOnlyOne7EMEnergyinHF,	new TH1D("PFMETvsOnlyOne7EMEnergyinHF","",90,0,1100));	
 	
-        x.CreatPlot(PFMETvsOneCandOne1ChargedHadron,	new TH1D("PFMETvsOneCandOne1ChargedHadron","",30,0,1100));	
-        x.CreatPlot(PFMETvsOneCandOne2Electron,     	new TH1D("PFMETvsOneCandOne2Electron,","",30,0,1100));		
-        x.CreatPlot(PFMETvsOneCandOne3Muon,        	new TH1D("PFMETvsOneCandOne3Muon","",30,0,1100));		
-        x.CreatPlot(PFMETvsOneCandOne4Photon,       	new TH1D("PFMETvsOneCandOne4Photon","",30,0,1100));		
-        x.CreatPlot(PFMETvsOneCandOne5NeutralHadron,	new TH1D("PFMETvsOneCandOne5NeutralHadron","",30,0,1100));	
-        x.CreatPlot(PFMETvsOneCandOne6HadronicEnergyinHF,new TH1D("PFMETvsOneCandOne6HadronicEnergyinHF","",30,0,1100));	
-        x.CreatPlot(PFMETvsOneCandOne7EMEnergyinHF,	new TH1D("PFMETvsOneCandOne7EMEnergyinHF","",30,0,1100));	
+	x.CreatPlot(PFMETvsOneCandOnePF,		new TH1D("PFMETvsOneCandOnePF","",90,0,1100));	
+        x.CreatPlot(PFMETvsOneCandOne1ChargedHadron,	new TH1D("PFMETvsOneCandOne1ChargedHadron","",90,0,1100));	
+        x.CreatPlot(PFMETvsOneCandOne2Electron,     	new TH1D("PFMETvsOneCandOne2Electron,","",90,0,1100));		
+        x.CreatPlot(PFMETvsOneCandOne3Muon,        	new TH1D("PFMETvsOneCandOne3Muon","",90,0,1100));		
+        x.CreatPlot(PFMETvsOneCandOne4Photon,       	new TH1D("PFMETvsOneCandOne4Photon","",90,0,1100));		
+        x.CreatPlot(PFMETvsOneCandOne5NeutralHadron,	new TH1D("PFMETvsOneCandOne5NeutralHadron","",90,0,1100));	
+        x.CreatPlot(PFMETvsOneCandOne6HadronicEnergyinHF,new TH1D("PFMETvsOneCandOne6HadronicEnergyinHF","",90,0,1100));	
+        x.CreatPlot(PFMETvsOneCandOne7EMEnergyinHF,	new TH1D("PFMETvsOneCandOne7EMEnergyinHF","",90,0,1100));	
         
-	x.CreatPlot(PFMETvsTwo1ChargedHadron,	new TH1D("PFMETvsTwo1ChargedHadron","",30,0,1100));	
-        x.CreatPlot(PFMETvsTwo2Electron,     	new TH1D("PFMETvsTwo2Electron,","",30,0,1100));		
-        x.CreatPlot(PFMETvsTwo3Muon,        	new TH1D("PFMETvsTwo3Muon","",30,0,1100));		
-        x.CreatPlot(PFMETvsTwo4Photon,       	new TH1D("PFMETvsTwo4Photon","",30,0,1100));		
-        x.CreatPlot(PFMETvsTwo5NeutralHadron,	new TH1D("PFMETvsTwo5NeutralHadron","",30,0,1100));	
-        x.CreatPlot(PFMETvsTwo6HadronicEnergyinHF, new TH1D("PFMETvsTwo6HadronicEnergyinHF","",30,0,1100));	
-        x.CreatPlot(PFMETvsTwo7EMEnergyinHF,	new TH1D("PFMETvsTwo7EMEnergyinHF","",30,0,1100));	
-        x.CreatPlot(PFMETvsTwoCand,			new TH1D("PFMETvsTwoCand","",30,0,1100));	
-        x.CreatPlot(PFMETvsOnlyOneCand,			new TH1D("PFMETvsOnlyOneCand","",30,0,1100));	
-        x.CreatPlot(PFMETvsZeroCand,		new TH1D("PFMETvsZeroCand","",30,0,1100));
+	x.CreatPlot(PFMETvsTwoPF,		new TH1D("PFMETvsTwoPF","",90,0,1100));	
+	x.CreatPlot(PFMETvsTwo1ChargedHadron,	new TH1D("PFMETvsTwo1ChargedHadron","",90,0,1100));	
+        x.CreatPlot(PFMETvsTwo2Electron,     	new TH1D("PFMETvsTwo2Electron,","",90,0,1100));		
+        x.CreatPlot(PFMETvsTwo3Muon,        	new TH1D("PFMETvsTwo3Muon","",90,0,1100));		
+        x.CreatPlot(PFMETvsTwo4Photon,       	new TH1D("PFMETvsTwo4Photon","",90,0,1100));		
+        x.CreatPlot(PFMETvsTwo5NeutralHadron,	new TH1D("PFMETvsTwo5NeutralHadron","",90,0,1100));	
+        x.CreatPlot(PFMETvsTwo6HadronicEnergyinHF, new TH1D("PFMETvsTwo6HadronicEnergyinHF","",90,0,1100));	
+        x.CreatPlot(PFMETvsTwo7EMEnergyinHF,	new TH1D("PFMETvsTwo7EMEnergyinHF","",90,0,1100));	
+        x.CreatPlot(PFMETvsTwoCand,			new TH1D("PFMETvsTwoCand","",90,0,1100));	
+        x.CreatPlot(PFMETvsOnlyOneCand,			new TH1D("PFMETvsOnlyOneCand","",90,0,1100));	
+        x.CreatPlot(PFMETvsZeroCand,		new TH1D("PFMETvsZeroCand","",90,0,1100));
 	/*-----create profile------*/
 	x.CreatProfile(profile_2PF,new TProfile("profile_2PF","",6,0,6));
         x.CreatProfile(profile_1PF_1reco,new TProfile("profile_1PF_1reco","",6,0,6));
@@ -324,7 +329,7 @@ public:
 	//no cut
 	if(TRG) CutFlowCand_TRG.push_back(cands);
 	//MET
-	if(QualCut && dEdXCut &&  ECut  )	 EcalShower.push_back(cands);
+	if(TRG && QualCut && dEdXCut &&  ECut  )	 EcalShower.push_back(cands);
 	//cut all 
 	if(TRG && QualCut && ECut && F51Cut && dEdXCut) CutFlowCand_Dedx.push_back(cands);
     }
@@ -497,7 +502,7 @@ public:
 			if(pfAntiUnknown[0].pf_pdgId_ == 5) x.GetPlot(PFMETvsTwo5NeutralHadron)->Fill(PFMET_pt);
 			if(pfAntiUnknown[0].pf_pdgId_ == 6) x.GetPlot(PFMETvsTwo6HadronicEnergyinHF)->Fill(PFMET_pt);
 			if(pfAntiUnknown[0].pf_pdgId_ == 7) x.GetPlot(PFMETvsTwo7EMEnergyinHF)->Fill(PFMET_pt);
-
+			x.GetPlot(PFMETvsTwoPF)->Fill(PFMET_pt);
 			x.GetProfile(profile_2PF)->Fill(pfUnknown[0].pf_pdgId_,PFMET_pt);
 			x.GetProfile(profile_2PF)->Fill(pfAntiUnknown[0].pf_pdgId_,PFMET_pt);
 //	  if(PFMET_pt > 300){
@@ -524,6 +529,7 @@ public:
 			if(pfUnknown[0].pf_pdgId_ == 6) x.GetPlot(PFMETvsOneCandOne6HadronicEnergyinHF)->Fill(PFMET_pt);
 			if(pfUnknown[0].pf_pdgId_ == 7) x.GetPlot(PFMETvsOneCandOne7EMEnergyinHF)->Fill(PFMET_pt);
 			x.GetProfile(profile_1PF_1reco)->Fill(pfUnknown[0].pf_pdgId_,PFMET_pt);
+			x.GetPlot(PFMETvsOneCandOnePF)->Fill(PFMET_pt);
 
 		}
 		if(pfAmon!=0){
@@ -536,6 +542,7 @@ public:
 			if(pfAntiUnknown[0].pf_pdgId_ == 6) x.GetPlot(PFMETvsOneCandOne6HadronicEnergyinHF)->Fill(PFMET_pt);
 			if(pfAntiUnknown[0].pf_pdgId_ == 7) x.GetPlot(PFMETvsOneCandOne7EMEnergyinHF)->Fill(PFMET_pt);
 			x.GetProfile(profile_1PF_1reco)->Fill(pfAntiUnknown[0].pf_pdgId_,PFMET_pt);
+			x.GetPlot(PFMETvsOneCandOnePF)->Fill(PFMET_pt);
 		}
 	} 
 	else if(Shower.size()==1 && AntiShower.size() == 0 && pfMono==1 && pfAmon==0){
@@ -552,6 +559,7 @@ public:
 			if(pfUnknown[0].pf_pdgId_ == 5) x.GetPlot(PFMETvsOnlyOne5NeutralHadron)->Fill(PFMET_pt);
 			if(pfUnknown[0].pf_pdgId_ == 6) x.GetPlot(PFMETvsOnlyOne6HadronicEnergyinHF)->Fill(PFMET_pt);
 			if(pfUnknown[0].pf_pdgId_ == 7) x.GetPlot(PFMETvsOnlyOne7EMEnergyinHF)->Fill(PFMET_pt);
+			x.GetPlot(PFMETvsOnlyOnePF)->Fill(PFMET_pt);
 			x.GetProfile(profile_1PFonly)->Fill(pfUnknown[0].pf_pdgId_,PFMET_pt);
 	}
 	else if(Shower.size()==0 && AntiShower.size() == 1 && pfMono==0 && pfAmon==1){
@@ -569,6 +577,7 @@ public:
 			if(pfAntiUnknown[0].pf_pdgId_ == 5) x.GetPlot(PFMETvsOnlyOne5NeutralHadron)->Fill(PFMET_pt);
 			if(pfAntiUnknown[0].pf_pdgId_ == 6) x.GetPlot(PFMETvsOnlyOne6HadronicEnergyinHF)->Fill(PFMET_pt);
 			if(pfAntiUnknown[0].pf_pdgId_ == 7) x.GetPlot(PFMETvsOnlyOne7EMEnergyinHF)->Fill(PFMET_pt);
+			x.GetPlot(PFMETvsOnlyOnePF)->Fill(PFMET_pt);
 			x.GetProfile(profile_1PFonly)->Fill(pfAntiUnknown[0].pf_pdgId_,PFMET_pt);
 	} 
 	//MET should be small case
@@ -646,7 +655,7 @@ public:
   void WritePlots(TFile *oFile ){
 	oFile->cd(trigName_.c_str());
 	
-//	Plot[0].WritePlot();
+	Plot[0].WritePlot();
 	Plot[0].WriteProfile();
 	
   }
